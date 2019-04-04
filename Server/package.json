@@ -1,0 +1,9 @@
+{
+  "name": "Texty",
+  "version": "1.0.0",
+  "description": "chat application",
+  "dependencies": {
+    "express": "^4.16.4",
+    "socket.io": "^2.2.0"
+  }
+}
