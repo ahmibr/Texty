@@ -1,0 +1,2 @@
+# Texty
+Android Chat Application
