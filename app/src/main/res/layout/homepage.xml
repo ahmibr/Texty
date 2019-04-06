@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fitsSystemWindows="true">
+
+    <Button
+        android:id="@+id/signOutButton"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="263dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="74dp"
+        android:layout_marginTop="562dp"
+        android:layout_marginEnd="74dp"
+        android:background="#008542"
+        android:text="SignOut"
+        android:onClick="SignUp"
+        />
+</ScrollView>

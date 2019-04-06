@@ -11,25 +11,26 @@
         android:id="@+id/textViewP"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="332dp"
+        android:layout_marginEnd="317dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="380dp"
-        android:layout_marginEnd="317dp"
-        android:layout_marginBottom="332dp"
         android:text="Password"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="264dp"
         android:layout_height="241dp"
-        android:layout_marginStart="74dp"
-        android:layout_marginTop="32dp"
         android:layout_marginEnd="73dp"
+        android:layout_marginStart="74dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo" />
@@ -39,43 +40,52 @@
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="204dp"
         android:layout_height="45dp"
+        android:layout_marginEnd="103dp"
         android:layout_marginStart="104dp"
         android:layout_marginTop="498dp"
-        android:layout_marginEnd="103dp"
         android:background="#008542"
         android:text="Sign in"
-        android:textColorLink="@android:color/holo_blue_dark"
+        android:onClick="SignIn"
+        android:textColorLink="#008542"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/signUpButton"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="263dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="74dp"
-        android:layout_marginTop="562dp"
-        android:layout_marginEnd="74dp"
-        android:background="#008542"
-        android:text="No Account? Sign up now"
+
+    <TextView
+        android:id="@+id/link_login"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="568dp"
+        android:onClick="SignUp"
+        android:text="Don't have Account Sign Up"
+        android:textSize="16dip"
+        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
     <EditText
-        android:id="@+id/passwordText"
+        android:id="@+id/usernameText"
         android:layout_width="322dp"
         android:layout_height="48dp"
         android:ems="10"
-        android:inputType="textPassword"
+        android:inputType="textPersonName"
+        android:textCursorDrawable="@drawable/cursor_color"
+        android:textColorHighlight="#008542"
+        android:textColorHint="#008542"
         android:textColorLink="#008542"
+        android:backgroundTint="#008542"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.6" />
+        app:layout_constraintVertical_bias="0.428"
+
+    />
 
     <TextView
         android:id="@+id/textViewU"
@@ -94,17 +104,19 @@
         tools:ignore="MissingConstraints" />
 
     <EditText
-        android:id="@+id/usernameText"
+        android:id="@+id/passwordText"
         android:layout_width="322dp"
         android:layout_height="48dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="textPassword"
+        android:textCursorDrawable="@drawable/cursor_color"
         android:textColorLink="#008542"
+        android:backgroundTint="#008542"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.428" />
+        app:layout_constraintVertical_bias="0.618" />
 
 </android.support.constraint.ConstraintLayout>
