@@ -1,5 +1,6 @@
 package com.example.texty.HomePage;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,19 +13,8 @@ import com.example.texty.R;
 import com.example.texty.SignIn.SignInActivity;
 import com.example.texty.Utilities.Authenticator;
 
-import com.example.texty.Utilities.Constants;
-import com.github.nkzawa.emitter.Emitter;
-import com.github.nkzawa.socketio.client.IO;
-import com.github.nkzawa.socketio.client.Socket;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.net.URISyntaxException;
-
-
-
-public class HomePageActivity extends AppCompatActivity {
+public class HomePageActivity extends AppCompatActivity implements HomePageView{
 
 
     private final String TAG = "HomePageActivity";
@@ -36,7 +26,7 @@ public class HomePageActivity extends AppCompatActivity {
 
         mPresenter = new HomePagePresenter(this);
 
-        if(!Authenticator.isLoggedIn(this))
+        if(!mPresenter.IsLoggedIn())
         {
             reSignIn();
         }
@@ -44,12 +34,12 @@ public class HomePageActivity extends AppCompatActivity {
             mPresenter.initializeSocket();
             mPresenter.initializeChat();
 
-            Toast.makeText(getApplicationContext(), "Hello " + Authenticator.getUserName(getApplicationContext()), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Hello " + Authenticator.getUsername(getApplicationContext()), Toast.LENGTH_LONG).show();
             final Button button = (Button) findViewById(R.id.signOutButton);
 
             button.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    Authenticator.setUserName(HomePageActivity.this, "");
+                    Authenticator.setUsername(HomePageActivity.this, "");
                     Authenticator.setToken(HomePageActivity.this, "");
 
                     Intent signInIntent = new Intent(HomePageActivity.this, SignInActivity.class);
@@ -78,5 +68,25 @@ public class HomePageActivity extends AppCompatActivity {
         super.onDestroy();
 
         mPresenter.closeSocket();
+    }
+
+    @Override
+    public void runThread(Runnable thread) {
+        runOnUiThread(thread);
+    }
+
+    @Override
+    public void addMyMessage(String message) {
+
+    }
+
+    @Override
+    public void addOtherMessage(String message, String username) {
+
+    }
+
+    @Override
+    public Context getContext() {
+        return getApplicationContext();
     }
 }

@@ -19,19 +19,6 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signin);
 
-        final Button button = (Button) findViewById(R.id.signInButton);
-
-        /*button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
-                String userName = ((EditText) findViewById(R.id.usernameText)).getText().toString();
-                Authenticator.setUserName(SignInActivity.this, userName);
-
-                Intent homepageIntent = new Intent(SignInActivity.this, HomePageActivity.class);
-                startActivity(homepageIntent);
-                finish();
-            }
-        });*/
     }
 
     public void SignUp(View v) {
