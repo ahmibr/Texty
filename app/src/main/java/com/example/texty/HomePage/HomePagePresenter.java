@@ -81,6 +81,7 @@ public class HomePagePresenter {
     }
 
     void closeSocket(){
-        mSocket.close();
+        if(mSocket != null)
+            mSocket.close();
     }
 }

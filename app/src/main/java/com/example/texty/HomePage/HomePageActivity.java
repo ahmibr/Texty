@@ -74,7 +74,9 @@ public class HomePageActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        Log.d(TAG,"Socket closed");
         super.onDestroy();
+
         mPresenter.closeSocket();
     }
 }
