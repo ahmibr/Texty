@@ -6,23 +6,23 @@ import android.preference.PreferenceManager;
 
 public class Authenticator {
 
-    static private final String PREF_USER_NAME = "username";
+    static private final String PREF_USERNAME = "username";
     static private final String PREF_TOKEN = "token";
 
     static private SharedPreferences getSharedPreferences(Context ctx) {
         return PreferenceManager.getDefaultSharedPreferences(ctx);
     }
 
-    public static void setUserName(Context context, String userName)
+    public static void setUsername(Context context, String username)
     {
         SharedPreferences.Editor editor = getSharedPreferences(context).edit();
-        editor.putString(PREF_USER_NAME, userName);
+        editor.putString(PREF_USERNAME, username);
         editor.commit();
     }
 
-    public static String getUserName(Context context)
+    public static String getUsername(Context context)
     {
-        return getSharedPreferences(context).getString(PREF_USER_NAME, "");
+        return getSharedPreferences(context).getString(PREF_USERNAME, "");
     }
 
     public static void setToken(Context context, String token)
@@ -38,7 +38,7 @@ public class Authenticator {
     }
 
     public static boolean isLoggedIn(Context context){
-       return getUserName(context).length() != 0;
+       return getUsername(context).length() != 0;
     }
 
 

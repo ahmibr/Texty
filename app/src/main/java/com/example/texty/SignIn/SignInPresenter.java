@@ -1,8 +1,5 @@
 package com.example.texty.SignIn;
 
-import android.content.Context;
-import android.content.ContextWrapper;
-import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 
@@ -10,10 +7,7 @@ import com.example.texty.Utilities.Authenticator;
 import com.example.texty.Utilities.Constants;
 import com.loopj.android.http.*;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
-
-import cz.msebera.android.httpclient.Header;
 
 
 public class SignInPresenter {
@@ -45,7 +39,7 @@ public class SignInPresenter {
                     if (response.isNull("error")) {
                         String token = response.getString("token");
 
-                        Authenticator.setUserName(mView.getContext(),userName);
+                        Authenticator.setUsername(mView.getContext(),userName);
                         Authenticator.setToken(mView.getContext(),token);
 
                         //@TODO add callback
