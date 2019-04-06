@@ -43,6 +43,20 @@ public class HomePageActivity extends AppCompatActivity {
         else {
             mPresenter.initializeSocket();
             mPresenter.initializeChat();
+
+            Toast.makeText(getApplicationContext(), "Hello " + Authenticator.getUserName(getApplicationContext()), Toast.LENGTH_LONG).show();
+            final Button button = (Button) findViewById(R.id.signOutButton);
+
+            button.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Authenticator.setUserName(HomePageActivity.this, "");
+                    Authenticator.setToken(HomePageActivity.this, "");
+
+                    Intent signInIntent = new Intent(HomePageActivity.this, SignInActivity.class);
+                    startActivity(signInIntent);
+                    finish();
+                }
+            });
         }
 
     }
@@ -55,6 +69,12 @@ public class HomePageActivity extends AppCompatActivity {
 
 
     void printToast(String message){
+        Toast.makeText(getApplicationContext(),message,Toast.LENGTH_LONG).show();
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.closeSocket();
     }
 }

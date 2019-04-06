@@ -59,7 +59,11 @@ public class HomePagePresenter {
                    mView.runOnUiThread(mThread);
                 }
             };
+            mSocket.on("new message",onNewMessage);
             mSocket.connect();
+
+            Log.d(TAG,"Started socket successfully");
+
         } catch (URISyntaxException e) {
             e.printStackTrace();
             //Connection error, go out
@@ -69,10 +73,14 @@ public class HomePagePresenter {
     void sendMessage(String message){
         //@TODO Add message to list
         //@TODO Remove text from textview
-        mSocket.emit("group message", message);
+        mSocket.emit("new message", message);
     }
 
     void initializeChat(){
 
+    }
+
+    void closeSocket(){
+        mSocket.close();
     }
 }

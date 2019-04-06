@@ -23,8 +23,8 @@ public class SignInActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                String email = ((EditText) findViewById(R.id.emailText)).getText().toString();
-                Authenticator.setUserName(SignInActivity.this,email);
+                String userName = ((EditText) findViewById(R.id.usernameText)).getText().toString();
+                Authenticator.setUserName(SignInActivity.this,userName);
 
                 Intent homepageIntent = new Intent(SignInActivity.this, HomePageActivity.class);
                 startActivity(homepageIntent);
@@ -32,4 +32,6 @@ public class SignInActivity extends AppCompatActivity {
             }
         });
     }
+
+
 }
