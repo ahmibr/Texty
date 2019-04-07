@@ -19,15 +19,15 @@ import java.util.concurrent.ConcurrentNavigableMap;
 public class HomePagePresenter {
 
     private Socket mSocket;
-    //    private ;
+//    private ;
     private HomePageView mView;
     private final String TAG = "HomePageActivity";
 
-    HomePagePresenter(HomePageView view) {
+    HomePagePresenter(HomePageView view){
         mView = view;
     }
 
-    void initializeSocket() {
+    void initializeSocket(){
         //@TODO get server link from DB
         try {
             mSocket = IO.socket(Constants.CHAT_ROOM_API);
@@ -35,48 +35,77 @@ public class HomePagePresenter {
             Emitter.Listener onNewMessage = new Emitter.Listener() {
                 @Override
                 public void call(final Object... args) {
-                    receiveMessage();
+                    receiveMessage(args);
                 }
             };
-            mSocket.on("chat message", onNewMessage);
+            mSocket.on("chat message",onNewMessage);
             mSocket.connect();
 
-            Log.d(TAG, "Started socket successfully");
+            Log.d(TAG,"Started socket successfully");
 
         } catch (URISyntaxException e) {
             e.printStackTrace();
             //Connection error, go out
-            Log.e(TAG, "Socket Error");
+            Log.e(TAG,"Socket Error");
         }
     }
 
-    void sendMessage(String message) {
+    void sendMessage(String message){
         //@TODO Add message to list
         //@TODO Remove text from textview
         message = message.trim();
-        if (message.isEmpty())
+        if(message.isEmpty())
             return;
 
-        mSocket.emit("chat message", Authenticator.getUsername(mView.getContext()) + ": " + message);
+        mSocket.emit("chat message", Authenticator.getUsername(mView.getContext()) + ": " +message);
 
     }
 
-    void receiveMessage() {
+    void receiveMessage(){
 
     }
 
-    void initializeChat() {
+    void initializeChat(){
 
     }
 
-    void closeSocket() {
-        if (mSocket != null) {
+    void closeSocket(){
+        if(mSocket != null)
+        {
             mSocket.close();
             mSocket.off("new message");
         }
 
     }
 
+    void receiveMessage(final Object... args){
+        Runnable mThread = new Runnable() {
+            @Override
+            public void run() {
+                Log.i(TAG,"I'm in thread running");
+//                            JSONObject data = (JSONObject) args[0];
+//                            String username;
+                String message = (String)args[0];
+//                            mView.printToast(message);
+//                            String messageType;
+//                            try {
+//                                username = data.getString("username");
+//                                message = data.getString("message");
+//                                messageType = data.getString("messageType");
+//                                mView.printToast(message);
+//                            } catch (JSONException e) {
+//                                Log.e(TAG,"An error in parsing JSON");
+//                                return;
+//                            }
+
+
+                //@TODO add the message to view
+                    mView.addMyMessage(message);
+            }
+        };
+
+        mView.runThread(mThread);
+    }
     public boolean IsLoggedIn() {
         return Authenticator.isLoggedIn(mView.getContext());
     }
