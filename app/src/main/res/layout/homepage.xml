@@ -1,19 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:fitsSystemWindows="true">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:clipToPadding="false"
+    android:focusableInTouchMode="true">
 
-    <Button
-        android:id="@+id/signOutButton"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="263dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="74dp"
-        android:layout_marginTop="562dp"
-        android:layout_marginEnd="74dp"
-        android:background="#008542"
-        android:text="SignOut"
-        android:onClick="SignUp"
-        />
-</ScrollView>
+    <FrameLayout
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="#008542" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:text="@string/app_name"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textSize="30dp"
+            android:textStyle="normal|italic" />
+    </FrameLayout>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:id="@+id/messages_view"
+        android:layout_weight="2"
+        android:divider="#fff"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/Message"
+            android:layout_width="336dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:ems="10"
+            android:hint="Write a message"
+            android:inputType="text"
+            android:paddingRight="5dp"
+             />
+
+        <Button
+            android:id="@+id/send"
+            android:layout_width="40dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/ic_send_"
+            android:paddingRight="5dp"
+            android:onClick="send"
+            android:scaleType="fitCenter" />
+    </LinearLayout>
+</LinearLayout>
