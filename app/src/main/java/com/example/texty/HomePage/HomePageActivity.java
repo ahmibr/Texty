@@ -22,7 +22,7 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home_page);
+        setContentView(R.layout.homepage);
 
         mPresenter = new HomePagePresenter(this);
 
