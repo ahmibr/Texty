@@ -79,6 +79,10 @@ public class HomePagePresenter {
     void sendMessage(String message){
         //@TODO Add message to list
         //@TODO Remove text from textview
+        message = message.trim();
+        if(message.isEmpty())
+            return;
+
         mSocket.emit("chat message", message);
     }
 
@@ -98,4 +102,5 @@ public class HomePagePresenter {
     public boolean IsLoggedIn() {
         return Authenticator.isLoggedIn(mView.getContext());
     }
+
 }
