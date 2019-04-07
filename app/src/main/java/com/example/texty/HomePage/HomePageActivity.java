@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.texty.R;
@@ -35,20 +36,15 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView{
             mPresenter.initializeChat();
 
             Toast.makeText(getApplicationContext(), "Hello " + Authenticator.getUsername(getApplicationContext()), Toast.LENGTH_LONG).show();
-            final Button button = (Button) findViewById(R.id.signOutButton);
 
-            button.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    Authenticator.setUsername(HomePageActivity.this, "");
-                    Authenticator.setToken(HomePageActivity.this, "");
-
-                    Intent signInIntent = new Intent(HomePageActivity.this, SignInActivity.class);
-                    startActivity(signInIntent);
-                    finish();
-                }
-            });
         }
+    }
 
+    public void send(View v){
+
+        Intent signInIntent = new Intent(HomePageActivity.this, SignInActivity.class);
+        startActivity(signInIntent);
+        finish();
     }
 
     void reSignIn(){
