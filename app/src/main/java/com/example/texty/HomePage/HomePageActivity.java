@@ -8,11 +8,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.texty.R;
 import com.example.texty.SignIn.SignInActivity;
 import com.example.texty.Utilities.Authenticator;
+
+import java.util.ArrayList;
 
 
 public class HomePageActivity extends AppCompatActivity implements HomePageView{
@@ -42,9 +46,11 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView{
 
     public void send(View v){
 
+        addMyMessage("reem ashraf");
         Intent signInIntent = new Intent(HomePageActivity.this, SignInActivity.class);
         startActivity(signInIntent);
         finish();
+
     }
 
     void reSignIn(){
@@ -73,7 +79,11 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView{
 
     @Override
     public void addMyMessage(String message) {
-
+        TextView view = (TextView)findViewById(R.id.temp);
+        view.setText(message);
+//        ListView list = (ListView)findViewById(R.id.messages_view);
+//        final ArrayList<String> list = new ArrayList<String>();
+//        list.add(message);
     }
 
     @Override
