@@ -34,7 +34,7 @@ public class SignInActivity extends AppCompatActivity {
 
         String userName = ((EditText) findViewById(R.id.usernameText)).getText().toString();
         Authenticator.setUsername(SignInActivity.this,userName);
-        
+
         Intent homepageIntent = new Intent(SignInActivity.this, HomePageActivity.class);
         startActivity(homepageIntent);
         finish();

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -42,9 +43,10 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView{
 
     public void send(View v){
 
-        Intent signInIntent = new Intent(HomePageActivity.this, SignInActivity.class);
-        startActivity(signInIntent);
-        finish();
+        String message = ((EditText)findViewById(R.id.Message)).getText().toString();
+        ((EditText)findViewById(R.id.Message)).getText().clear();
+        mPresenter.sendMessage(message);
+
     }
 
     void reSignIn(){
