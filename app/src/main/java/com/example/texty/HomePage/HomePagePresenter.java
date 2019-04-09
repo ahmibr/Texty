@@ -51,18 +51,15 @@ public class HomePagePresenter {
     }
 
     void sendMessage(String message){
-        //@TODO Add message to list
-        //@TODO Remove text from textview
         message = message.trim();
         if(message.isEmpty())
             return;
 
         mSocket.emit("chat message", Authenticator.getUsername(mView.getContext()) + ": " +message);
-
+        mView.addMyMessage(message);
     }
 
     void receiveMessage(){
-
     }
 
     void initializeChat(){
@@ -84,7 +81,7 @@ public class HomePagePresenter {
             public void run() {
                 Log.i(TAG,"I'm in thread running");
 //                            JSONObject data = (JSONObject) args[0];
-//                            String username;
+                String username = "yasser";
                 String message = (String)args[0];
 //                            mView.printToast(message);
 //                            String messageType;
@@ -98,9 +95,7 @@ public class HomePagePresenter {
 //                                return;
 //                            }
 
-
-                //@TODO add the message to view
-                    mView.addMyMessage(message);
+                    mView.addOtherMessage(message,username);
             }
         };
 

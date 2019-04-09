@@ -31,13 +31,34 @@ public class SignInActivity extends AppCompatActivity {
         finish();
     }
     public void SignIn(View v) {
+        boolean valid = true;
+        EditText userNameEditText = (EditText) findViewById(R.id.usernameText);
+        String userName = userNameEditText.getText().toString();
 
-        String userName = ((EditText) findViewById(R.id.usernameText)).getText().toString();
-        Authenticator.setUsername(SignInActivity.this,userName);
+        if(userName.length()==0)
 
-        Intent homepageIntent = new Intent(SignInActivity.this, HomePageActivity.class);
-        startActivity(homepageIntent);
-        finish();
+        {
+            userNameEditText.requestFocus();
+            userNameEditText.setError("FIELD CANNOT BE EMPTY");
+            valid = false ;
+        }
+
+        else if(!userName.matches("[a-zA-Z ]+"))
+        {
+            userNameEditText.requestFocus();
+            userNameEditText.setError("ENTER ONLY ALPHABETICAL CHARACTER");
+            valid = false ;
+        }
+
+        //TODO Validation For Password too
+        if (valid){
+            Authenticator.setUsername(SignInActivity.this,userName);
+
+            Intent homepageIntent = new Intent(SignInActivity.this, HomePageActivity.class);
+            startActivity(homepageIntent);
+            finish();
+        }
+
     }
 }
 
