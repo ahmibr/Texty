@@ -38,8 +38,18 @@ public class HomePagePresenter {
                     receiveMessage(args);
                 }
             };
+
+            Emitter.Listener onPrivateMessage = new Emitter.Listener() {
+                @Override
+                public void call(final Object... args) {
+                    receivePrivateMessage(args);
+                }
+            };
+
             mSocket.on("chat message",onNewMessage);
+            mSocket.on("private message",onPrivateMessage);
             mSocket.connect();
+            mSocket.emit("username",Authenticator.getUsername(mView.getContext()));
 
             Log.d(TAG,"Started socket successfully");
 
@@ -50,6 +60,24 @@ public class HomePagePresenter {
         }
     }
 
+    private void receivePrivateMessage(final Object... args) {
+        Runnable mThread = new Runnable() {
+            @Override
+            public void run() {
+                Log.i(TAG,"I'm in thread running");
+                String message = (String)args[0];
+                int idx = message.indexOf(":");
+                String username = message.substring(0,idx);
+                message = message.substring(idx+1);
+
+                //@TODO add the message to view
+                mView.notifyPrivateMessage(message,username);
+            }
+        };
+
+        mView.runThread(mThread);
+    }
+
     void sendMessage(String message){
         //@TODO Add message to list
         //@TODO Remove text from textview
@@ -58,10 +86,6 @@ public class HomePagePresenter {
             return;
 
         mSocket.emit("chat message", Authenticator.getUsername(mView.getContext()) + ": " +message);
-
-    }
-
-    void receiveMessage(){
 
     }
 
