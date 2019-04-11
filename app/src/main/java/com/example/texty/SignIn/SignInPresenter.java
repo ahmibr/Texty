@@ -18,8 +18,8 @@ public class SignInPresenter {
         mView = view;
     }
 
-    void signIn(final String userName, String password){
-        if(userName.isEmpty()){
+    void signIn(final String username, String password){
+        if(username.isEmpty()){
             mView.onFail("Please enter username");
             return;
         }
@@ -45,7 +45,7 @@ public class SignInPresenter {
                     if (response.isNull("error")) {
                         String token = response.getString("token");
 
-                        Authenticator.setUsername(mView.getContext(),userName);
+                        Authenticator.setUsername(mView.getContext(),username);
                         Authenticator.setToken(mView.getContext(),token);
 
                         //@TODO add callback
