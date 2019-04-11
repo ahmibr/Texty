@@ -22,8 +22,8 @@ const conversationSchema = new Schema({
 });
 
 const messageSchema = mongoose.Schema({
-    senderId: {type: Number, required: true},
-    content: String,
+    senderUserName: {type: String, required: true},
+    content: {type: String , required: true},
     timeCreated: {type: Date , default: Date.now},
     conversationId: {type: ObjectId, required: true}
 });
