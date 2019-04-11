@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -74,7 +75,11 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
         PopupMenu popup = new PopupMenu(this, v);
         popup.setOnMenuItemClickListener(this);
         popup.inflate(R.menu.popup_menu);
+
+        popup.getMenu().add("1");
+        popup.getMenu().add("2");
         popup.show();
+
     }
 
 
@@ -171,13 +176,13 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
 
     @Override
     public void removeUser(String username) {
-        Message m = new Message(username,username+"quited",3);
+        Message m = new Message(username,username+" quited",3);
         arrayList.add(m);
         messageadapter.notifyDataSetChanged();
         ListView list = (ListView)findViewById(R.id.messages_view);
         list.setSelection(list.getCount() - 1);
+        //TODO remove from list of users
     }
-
     @Override
     public Context getContext() {
         return getApplicationContext();
