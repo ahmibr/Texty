@@ -1,8 +1,8 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var userIDs = new Map();
-var usernames = new Map();
+const userIDs = new Map();
+const usernames = new Map();
 var usersList = [];
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
@@ -19,7 +19,9 @@ io.on('connection', function(socket){
     socket.broadcast.emit("user join",username);
     usersList.push(username);
     socket.to(socket.id).emit("retrieve list");
-    
+
+    console.log(usersList.length);
+    console.log(usersList);
     console.log("IDs");
     console.log(userIDs);
     console.log(usernames);

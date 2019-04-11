@@ -8,9 +8,6 @@ import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.net.URISyntaxException;
 
 public class HomePagePresenter {
@@ -45,7 +42,13 @@ public class HomePagePresenter {
 
             Emitter.Listener onRetrieveUserList = new Emitter.Listener() {
                 @Override
-                public void call(final Object... args) { addUsersList(args); }};
+                public void call(final Object... args) {
+                    try {
+                        retrieveUsersList(args);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }};
 
             mSocket.on("chat message",onNewMessage);
             mSocket.on("private message",onPrivateMessage);
@@ -65,7 +68,11 @@ public class HomePagePresenter {
 
     private void addUsersList(Object[] args) {
 
-        Log.d(TAG,(String)args[0]);
+        Log.d(TAG,(String)args[0]);}
+
+    private void retrieveUsersList(Object[] args) throws Exception {
+        throw new Exception("Error");
+//        Log.d(TAG,(String)args[0]);
     }
 
     private void addJoinedUser(Object[] args) {
