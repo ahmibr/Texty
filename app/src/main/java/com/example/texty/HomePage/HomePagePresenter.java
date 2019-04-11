@@ -60,7 +60,7 @@ public class HomePagePresenter {
                     removeLeftUser(args);
                 }};
 
-            mSocket.on("chat message",onNewMessage);
+            mSocket.on("group message",onNewMessage);
             mSocket.on("private message",onPrivateMessage);
             mSocket.on("user join",onUserJoin);
             mSocket.on("user leave",onUserLeave);
@@ -84,6 +84,7 @@ public class HomePagePresenter {
                 String username = (String)args[0];
                 usersList.remove(username);
                 mView.removeUser(username);
+                usersList.remove(username);
             }
         };
 
@@ -132,6 +133,7 @@ public class HomePagePresenter {
                 String username = (String)args[0];
                 usersList.add(username);
                 mView.addUser(username);
+                usersList.add(username);
             }
         };
 
@@ -175,7 +177,11 @@ public class HomePagePresenter {
         if(mSocket != null)
         {
             mSocket.close();
-            mSocket.off("new message");
+            mSocket.off("group message");
+            mSocket.off("private message");
+            mSocket.off("user join");
+            mSocket.off("user leave");
+            mSocket.off("retrieve list");
         }
 
     }

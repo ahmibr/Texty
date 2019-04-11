@@ -24,6 +24,8 @@ import android.widget.Toast;
 import com.example.texty.R;
 import com.example.texty.SignIn.SignInActivity;
 import com.example.texty.Utilities.Authenticator;
+
+import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.ToLongBiFunction;
@@ -33,8 +35,6 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
     private MessagesListAdapter messageadapter;
     private List<Message> arrayList;
 
-    //private List<String>menu;
-    //private ArrayAdapter<String> menuadapter;
     private String my_name ="reem ";
     private final String TAG = "HomePageActivity";
     private HomePagePresenter mPresenter;
@@ -76,19 +76,27 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
         popup.setOnMenuItemClickListener(this);
         popup.inflate(R.menu.popup_menu);
         Menu menu = popup.getMenu();
+
         SubMenu Menu = menu.addSubMenu(1,0,1,"Members");
-       //SubMenu Menu = menu.addSubMenu("Members");
-        Menu.add(1,1,1,"1");
-        Menu.add("2");
-        trailadd(Menu);
+        List<String> users = mPresenter.getUsersList();
+        for (int i=0;i<users.size();i++){
+            Menu.add(1,i+1,1,users.get(i));
+        }
+        //trailadd(Menu);
         popup.show();
 
     }
-    void trailadd(SubMenu m){
-        m.removeItem(1);
-        m.add("6");
-        m.add("5");
-    }
+  /*  void trailadd(SubMenu m){
+        //Log.d(TAG,m.getItem(1).getTitle().toString());
+        int i = 1;
+        String r = "Reem";
+        while(m.getItem(i).getTitle().toString().equals(r)){
+            Log.d(TAG,m.getItem(i).getTitle().toString());
+            i++;
+        }
+        m.removeItem(i);
+
+    }*/
 
     void reSignIn(){
         Intent signInIntent = new Intent(this, SignInActivity.class);
@@ -179,6 +187,7 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
         messageadapter.notifyDataSetChanged();
         ListView list = (ListView)findViewById(R.id.messages_view);
         list.setSelection(list.getCount() - 1);
+
     }
 
     @Override
