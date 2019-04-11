@@ -9,13 +9,11 @@ var io = require('socket.io')(http);
 var userIDs = new Map();
 var usernames = new Map();
 var usersList = [];
-<<<<<<< HEAD
-console.log("Server started");
-app.get('/', function(req, res){
-  res.sendFile(__dirname + '/index.html');
-});
-=======
->>>>>>> 3b3fcefd4375653a473013175ec101028817c9f8
+
+// console.log("Server started");
+// app.get('/', function(req, res){
+//   res.sendFile(__dirname + '/index.html');
+// });
 
 // express config
 app.use(bodyParser.urlencoded({ extended: true }));
