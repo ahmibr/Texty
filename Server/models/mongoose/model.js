@@ -17,7 +17,7 @@ var ObjectId = mongoose.Schema.Types.ObjectId;
 var exports = module.exports = {};
 
 const conversationSchema = new Schema({
-    participantsId: [Number],
+    participantsNames: [String],
     conversationType: {type: Boolean, required: true}
 });
 
