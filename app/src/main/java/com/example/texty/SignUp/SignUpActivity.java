@@ -23,7 +23,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     public void SignIn(View v) {
-
+        //TODO add values then goto homepage m4 sign (make sure meen AHMED)
         Intent signinIntent = new Intent(SignUpActivity.this, SignInActivity.class);
         startActivity(signinIntent);
         finish();

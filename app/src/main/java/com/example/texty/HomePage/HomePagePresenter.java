@@ -1,8 +1,6 @@
 package com.example.texty.HomePage;
 
-import android.app.Activity;
 import android.util.Log;
-import android.view.View;
 
 import com.example.texty.Utilities.Authenticator;
 import com.example.texty.Utilities.Constants;
@@ -14,12 +12,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
-import java.util.concurrent.ConcurrentNavigableMap;
 
 public class HomePagePresenter {
 
     private Socket mSocket;
-//    private ;
     private HomePageView mView;
     private final String TAG = "HomePageActivity";
 
@@ -79,14 +75,12 @@ public class HomePagePresenter {
     }
 
     void sendMessage(String message){
-        //@TODO Add message to list
-        //@TODO Remove text from textview
         message = message.trim();
         if(message.isEmpty())
             return;
 
         mSocket.emit("chat message", Authenticator.getUsername(mView.getContext()) + ": " +message);
-
+        mView.addMyMessage(message);
     }
 
     void initializeChat(){
@@ -108,8 +102,10 @@ public class HomePagePresenter {
             public void run() {
                 Log.i(TAG,"I'm in thread running");
 //                            JSONObject data = (JSONObject) args[0];
-//                            String username;
                 String message = (String)args[0];
+                int idx = message.indexOf(":");
+                String username = message.substring(0,idx);
+                message = message.substring(idx+1);
 //                            mView.printToast(message);
 //                            String messageType;
 //                            try {
@@ -122,9 +118,8 @@ public class HomePagePresenter {
 //                                return;
 //                            }
 
-
-                //@TODO add the message to view
-                    mView.addMyMessage(message);
+                    Log.d(TAG,"I received the message");
+                    mView.addOtherMessage(message,username);
             }
         };
 
