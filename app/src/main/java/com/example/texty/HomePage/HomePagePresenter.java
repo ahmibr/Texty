@@ -8,17 +8,24 @@ import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.List;
+
 
 public class HomePagePresenter {
 
     private Socket mSocket;
     private HomePageView mView;
     private final String TAG = "HomePageActivity";
+    private ArrayList<String> usersList;
 
     HomePagePresenter(HomePageView view){
         mView = view;
+        usersList = new ArrayList<>();
     }
 
     void initializeSocket(){
@@ -88,13 +95,32 @@ public class HomePagePresenter {
             @Override
             public void run() {
 
-                Log.d(TAG,(String)args[0]);
+                usersList.clear();
+
+                JSONArray jsonArray = (JSONArray)args[0];
+
+                Log.d(TAG,"Received users list");
+                for(int i=0;i<jsonArray.length();++i){
+                    try {
+                        usersList.add(jsonArray.getString(i));
+                        Log.d(TAG,jsonArray.getString(i));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                mView.addUsersList(usersList);
             }
         };
 
         mView.runThread(mThread);
+
+
     }
 
+    private List<String> getUsersList(){
+        return usersList;
+    }
     private void addJoinedUser(final Object[] args) {
 
         Runnable mThread = new Runnable() {

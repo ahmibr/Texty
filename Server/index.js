@@ -18,8 +18,10 @@ io.on('connection', function(socket){
     usernames.set(socket.id,username);
     socket.broadcast.emit("user join",username);
     usersList.push(username);
-    socket.to(socket.id).emit("retrieve list");
-
+    console.log("I sent users list");
+    console.log(usersList);
+    io.to(socket.id).emit("retrieve list",usersList);
+    console.log(socket.id);
     console.log(usersList.length);
     console.log(usersList);
     console.log("IDs");
@@ -32,7 +34,9 @@ io.on('connection', function(socket){
     console.log(username + ' disconnected');
     usernames.delete(socket.id);
     userIDs.delete(username);
-    usersList = usersList.filter(function(value, index, arr){ return value === username;});
+    usersList = usersList.filter(function(value, index, arr){ return value !== username;});
+    console.log(usersList);
+    console.log(socket.id);
     socket.broadcast.emit("user leave",username);
   });
 
