@@ -12,7 +12,6 @@ db.on('errors', function(err){
 
 const Schema = mongoose.Schema;
 var ObjectId = mongoose.Schema.Types.ObjectId;
-//create schema and model
 
 var exports = module.exports = {};
 
@@ -28,10 +27,8 @@ const messageSchema = mongoose.Schema({
     conversationId: {type: ObjectId, required: true}
 });
 
-
 const messageChar = mongoose.model('conversation' ,messageSchema);
 const conversationChar = mongoose.model('message' ,conversationSchema);
-
 
 exports.Message = messageChar;
 exports.Conversation = conversationChar;
