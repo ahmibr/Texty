@@ -1,16 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id ="@+id/Show_Friends"
-        android:title="Friends" />
 
     <item
         android:id ="@+id/Log_Out"
-        android:title="Log_Out">
-
-        <menu>
-
-        </menu>
-    </item>
+        android:title="Log_Out"/>
 
 </menu>

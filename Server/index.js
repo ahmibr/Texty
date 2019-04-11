@@ -1,14 +1,38 @@
+const env = require('dotenv').load();
+const port = process.env.PORT || 3000;
+const bodyParser = require('body-parser');
+const expressValidator = require('express-validator');
+
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-const userIDs = new Map();
-const usernames = new Map();
+var userIDs = new Map();
+var usernames = new Map();
 var usersList = [];
+<<<<<<< HEAD
 console.log("Server started");
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
+=======
+>>>>>>> 3b3fcefd4375653a473013175ec101028817c9f8
 
+// express config
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(expressValidator());
+
+// Models
+var sequelize_models = require("./models/sequelize");
+var mongoose_models = require("./models/mongoose/model");
+
+// setting models for API
+require("./routes/api").User = sequelize_models.user;
+require("./routes/api").Conversation = mongoose_models.Conversation;
+require("./routes/api").Message = mongoose_models.Message;
+
+const routes = require('./routes/web');
+app.use('/', routes);
 
 
 io.on('connection', function(socket){
@@ -55,6 +79,15 @@ io.on('connection', function(socket){
   
 });
 
-http.listen(3000, function(){
-  console.log('listening on *:3000');
+
+//Sync Database
+sequelize_models.sequelize.sync().then(function() {
+    console.log('Nice! Database looks fine')
+}).catch(function(err) {
+    console.log(err, "Something went wrong with the Database Update!")
+});
+
+
+http.listen(port, function(){
+    console.log('listening on *:' + port);
 });
