@@ -84,6 +84,7 @@ public class HomePagePresenter {
                 String username = (String)args[0];
                 usersList.remove(username);
                 mView.removeUser(username);
+                usersList.remove(username);
             }
         };
 
@@ -132,6 +133,7 @@ public class HomePagePresenter {
                 String username = (String)args[0];
                 usersList.add(username);
                 mView.addUser(username);
+                usersList.add(username);
             }
         };
 
