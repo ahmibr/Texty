@@ -83,6 +83,7 @@ public class HomePagePresenter {
                 String username = (String)args[0];
 
                 mView.removeUser(username);
+                usersList.remove(username);
             }
         };
 
@@ -118,7 +119,7 @@ public class HomePagePresenter {
 
     }
 
-    private List<String> getUsersList(){
+    List<String> getUsersList(){
         return usersList;
     }
     private void addJoinedUser(final Object[] args) {
@@ -129,6 +130,7 @@ public class HomePagePresenter {
                 String username = (String)args[0];
 
                 mView.addUser(username);
+                usersList.add(username);
             }
         };
 
