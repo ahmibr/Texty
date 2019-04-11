@@ -76,13 +76,11 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
         popup.setOnMenuItemClickListener(this);
         popup.inflate(R.menu.popup_menu);
         Menu menu = popup.getMenu();
-
         SubMenu Menu = menu.addSubMenu(1,0,1,"Members");
         List<String> users = mPresenter.getUsersList();
         for (int i=0;i<users.size();i++){
             Menu.add(1,i+1,1,users.get(i));
         }
-        //trailadd(Menu);
         popup.show();
 
     }
@@ -189,7 +187,6 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
         list.setSelection(list.getCount() - 1);
 
     }
-
     @Override
     public void removeUser(String username) {
         Message m = new Message(username,username+" quited",3);
@@ -206,16 +203,14 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
 
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
-        Log.d(TAG,""+ menuItem.getItemId());
+        List<String> users = mPresenter.getUsersList();
         switch (menuItem.getItemId()) {
             case R.id.Log_Out:
                 printToast("item 2 is clicked");
                 return true;
-//            case R.id.members:
-//                printToast("item 1 is clicked");
-//                return true;
             default:
-                return false;
+                printToast(menuItem.getTitle().toString());
+                return true;
 
         }
 
