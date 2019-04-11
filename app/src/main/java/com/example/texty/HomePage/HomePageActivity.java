@@ -68,8 +68,6 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
         String message = ((EditText)findViewById(R.id.Message)).getText().toString();
         ((EditText)findViewById(R.id.Message)).getText().clear();
         mPresenter.sendMessage(message);
-//        mPresenter.sendMessage(message);
-
     }
     public void onMoreClick(View v)
     {
@@ -164,12 +162,20 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
 
     @Override
     public void addUser(String username) {
-
+        Message m = new Message(username,"Joined",3);
+        arrayList.add(m);
+        messageadapter.notifyDataSetChanged();
+        ListView list = (ListView)findViewById(R.id.messages_view);
+        list.setSelection(list.getCount() - 1);
     }
 
     @Override
     public void removeUser(String username) {
-
+        Message m = new Message(username,"quited",3);
+        arrayList.add(m);
+        messageadapter.notifyDataSetChanged();
+        ListView list = (ListView)findViewById(R.id.messages_view);
+        list.setSelection(list.getCount() - 1);
     }
 
     @Override

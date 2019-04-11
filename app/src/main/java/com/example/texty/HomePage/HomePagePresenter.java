@@ -64,11 +64,13 @@ public class HomePagePresenter {
     }
 
     private void addUsersList(Object[] args) {
+
         Log.d(TAG,(String)args[0]);
     }
 
     private void addJoinedUser(Object[] args) {
-        Log.d(TAG,(String)args[0]);
+        mView.addUser((String)args[0]);
+       // Log.d(TAG,(String)args[0]);
     }
 
     private void receivePrivateMessage(final Object... args) {
