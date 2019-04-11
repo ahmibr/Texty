@@ -157,6 +157,16 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
     }
 
     @Override
+    public void addUsersList(List<String> usersList) {
+
+    }
+
+    @Override
+    public void addUser(String username) {
+        
+    }
+
+    @Override
     public Context getContext() {
         return getApplicationContext();
     }
