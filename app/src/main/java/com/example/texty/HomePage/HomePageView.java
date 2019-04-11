@@ -12,5 +12,6 @@ public interface HomePageView {
     void notifyPrivateMessage(String message,String username);
     void addUsersList(List<String> usersList);
     void addUser(String username);
+    void removeUser(String username);
     Context getContext();
 }

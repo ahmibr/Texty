@@ -163,7 +163,12 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
 
     @Override
     public void addUser(String username) {
-        
+
+    }
+
+    @Override
+    public void removeUser(String username) {
+
     }
 
     @Override
