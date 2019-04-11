@@ -2,12 +2,12 @@ package com.example.texty.HomePage;
 
 public class Message {
     private String fromName, message;
-    private boolean isSelf;
+    private Integer isSelf;
 
     public Message() {
     }
 
-    public Message(String fromName, String message, boolean isSelf) {
+    public Message(String fromName, String message, Integer isSelf) {
         this.fromName = fromName;
         this.message = message;
         this.isSelf = isSelf;
@@ -29,11 +29,11 @@ public class Message {
         this.message = message;
     }
 
-    public boolean isSelf() {
+    public Integer isSelf() {
         return isSelf;
     }
 
-    public void setSelf(boolean isSelf) {
+    public void setSelf(Integer isSelf) {
         this.isSelf = isSelf;
     }
 

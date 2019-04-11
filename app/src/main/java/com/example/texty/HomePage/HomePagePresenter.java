@@ -67,6 +67,7 @@ public class HomePagePresenter {
         }
     }
 
+
     private void retrieveUsersList(Object[] args) {
         Runnable mThread = new Runnable() {
             @Override
