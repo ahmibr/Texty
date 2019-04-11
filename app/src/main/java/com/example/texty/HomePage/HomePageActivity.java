@@ -75,13 +75,20 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
         PopupMenu popup = new PopupMenu(this, v);
         popup.setOnMenuItemClickListener(this);
         popup.inflate(R.menu.popup_menu);
-
-        popup.getMenu().add("1");
-        popup.getMenu().add("2");
+        Menu menu = popup.getMenu();
+        SubMenu Menu = menu.addSubMenu(1,0,1,"Members");
+       //SubMenu Menu = menu.addSubMenu("Members");
+        Menu.add(1,1,1,"1");
+        Menu.add("2");
+        trailadd(Menu);
         popup.show();
 
     }
-
+    void trailadd(SubMenu m){
+        m.removeItem(1);
+        m.add("6");
+        m.add("5");
+    }
 
     void reSignIn(){
         Intent signInIntent = new Intent(this, SignInActivity.class);
@@ -190,13 +197,14 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
 
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {
+        Log.d(TAG,""+ menuItem.getItemId());
         switch (menuItem.getItemId()) {
             case R.id.Log_Out:
                 printToast("item 2 is clicked");
                 return true;
-            case R.id.Show_Friends:
-                printToast("item 1 is clicked");
-                return true;
+//            case R.id.members:
+//                printToast("item 1 is clicked");
+//                return true;
             default:
                 return false;
 
