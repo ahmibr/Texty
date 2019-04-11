@@ -52,13 +52,13 @@ public class MessagesListAdapter extends BaseAdapter {
                 .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 
         // Identifying the message owner
-        if (messagesItems.get(position).isSelf()) {
+        if (messagesItems.get(position).isSelf()==1) {
             // message belongs to you, so load the right aligned layout
             convertView = mInflater.inflate(R.layout.my_message,
                     null);
             TextView txtMsg = (TextView) convertView.findViewById(R.id.message_body);
             txtMsg.setText(m.getMessage());
-        } else {
+        } else if(messagesItems.get(position).isSelf()==2) {
             // message belongs to other person, load the left aligned layout
             convertView = mInflater.inflate(R.layout.their_message,
                     null);
@@ -67,7 +67,12 @@ public class MessagesListAdapter extends BaseAdapter {
             txtMsg.setText(m.getMessage());
             name.setText(m.getFromName());
         }
-
+        else{
+            convertView = mInflater.inflate(R.layout.user_join,
+                    null);
+            TextView joinMsg = (TextView) convertView.findViewById(R.id.join_message);
+            joinMsg.setText(m.getMessage());
+         }
         return convertView;
     }
 }

@@ -64,14 +64,14 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
         }
     }
 
-    public void send(View v){
+    public void OnSendClick(View v){
         String message = ((EditText)findViewById(R.id.Message)).getText().toString();
         ((EditText)findViewById(R.id.Message)).getText().clear();
         mPresenter.sendMessage(message);
 //        mPresenter.sendMessage(message);
 
     }
-    public void viewspinner(View v)
+    public void onMoreClick(View v)
     {
         PopupMenu popup = new PopupMenu(this, v);
         popup.setOnMenuItemClickListener(this);
@@ -118,16 +118,17 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
 
     @Override
     public void addMyMessage(String message) {
-        Message m = new Message(my_name,message,true);
+        Message m = new Message(my_name,message,1);
         arrayList.add(m);
         messageadapter.notifyDataSetChanged();
         ListView list = (ListView)findViewById(R.id.messages_view);
         list.setSelection(list.getCount() - 1);
     }
 
+
     @Override
     public void addOtherMessage(String message, String username) {
-        Message m = new Message(username,message,false);
+        Message m = new Message(username,message,2);
         arrayList.add(m);
         messageadapter.notifyDataSetChanged();
         ListView list = (ListView)findViewById(R.id.messages_view);
