@@ -12,15 +12,21 @@ import org.json.JSONObject;
 
 public class SignInPresenter {
 
-    View mView;
-
-    SignInPresenter(View view){
+    SignInView mView;
+    final String TAG = "SignInPresenter";
+    SignInPresenter(SignInView view){
         mView = view;
     }
 
     void signIn(final String userName, String password){
-
-        final String TAG = "SignInPresenter";
+        if(userName.isEmpty()){
+            mView.onFail("Please enter username");
+            return;
+        }
+        if(password.isEmpty()){
+            mView.onFail("Please enter password");
+            return;
+        }
 
         AsyncHttpClient server = new AsyncHttpClient();
 
@@ -43,13 +49,13 @@ public class SignInPresenter {
                         Authenticator.setToken(mView.getContext(),token);
 
                         //@TODO add callback
-                        //mView.onSuccess();
+                        mView.onSuccess();
                     }
                     else {
                         String error = response.getString("error");
 
                         //@TODO add callback
-                        //mView.onFail();
+                        mView.onFail(error);
                     }
                 }
                 catch (Exception e) {

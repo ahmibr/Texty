@@ -1,32 +1,48 @@
+const env = require('dotenv').load();
+const port = process.env.PORT || 3000;
+const bodyParser = require('body-parser');
+const expressValidator = require('express-validator');
+
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-const userIDs = new Map();
-const usernames = new Map();
+var userIDs = new Map();
+var usernames = new Map();
 var usersList = [];
-app.get('/', function(req, res){
-  res.sendFile(__dirname + '/index.html');
-});
 
+// console.log("Server started");
+// app.get('/', function(req, res){
+//   res.sendFile(__dirname + '/index.html');
+// });
+
+// express config
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(expressValidator());
+
+// Models
+var sequelize_models = require("./models/sequelize");
+var mongoose_models = require("./models/mongoose/model");
+
+// setting models for API
+require("./routes/api").User = sequelize_models.user;
+require("./routes/api").Conversation = mongoose_models.Conversation;
+require("./routes/api").Message = mongoose_models.Message;
+
+const routes = require('./routes/web');
+app.use('/', routes);
 
 
 io.on('connection', function(socket){
-  console.log('a user connected');
 
+  console.log('a user connected');
   socket.on('username', function(username){
+    console.log(username + ' set user name');
     userIDs.set(username,socket.id);
     usernames.set(socket.id,username);
     socket.broadcast.emit("user join",username);
     usersList.push(username);
-    console.log("I sent users list");
-    console.log(usersList);
     io.to(socket.id).emit("retrieve list",usersList);
-    console.log(socket.id);
-    console.log(usersList.length);
-    console.log(usersList);
-    console.log("IDs");
-    console.log(userIDs);
-    console.log(usernames);
   });
 
   socket.on('disconnect', function(){
@@ -35,21 +51,41 @@ io.on('connection', function(socket){
     usernames.delete(socket.id);
     userIDs.delete(username);
     usersList = usersList.filter(function(value, index, arr){ return value !== username;});
-    console.log(usersList);
-    console.log(socket.id);
     socket.broadcast.emit("user leave",username);
   });
 
-  socket.on('chat message', function(msg){
-    // console.log(userIDs.get("Ahmed"));
-    // io.to(userIDs.get("Ahmed")).emit('private message', msg);
-    // console.log('message: ' + msg);
-    socket.broadcast.emit('chat message', msg);
-    console.log('message: ' + msg);
+  socket.on('group message', function(message){
+    var username = usernames.get(socket.id);
+    var dataSent = {"username":username,"message":message};
+    socket.broadcast.emit('group message', dataSent);
+    console.log('message: ' + message);
+  });
+
+  socket.on('private message', function(data){
+    var to = data["to"];
+    var message = data["message"];
+    var username = usernames.get(socket.id);
+
+    //if user is online
+    if(userIDs.has(to)){
+      var dataSent = {"username":username,"message":message};
+
+      io.to(to).emit('private message', dataSent);
+    }
+    console.log('message: ' + message);
   });
   
 });
 
-http.listen(3000, function(){
-  console.log('listening on *:3000');
+
+//Sync Database
+sequelize_models.sequelize.sync().then(function() {
+    console.log('Nice! Database looks fine')
+}).catch(function(err) {
+    console.log(err, "Something went wrong with the Database Update!")
+});
+
+
+http.listen(port, function(){
+    console.log('listening on *:' + port);
 });
