@@ -142,14 +142,16 @@ public class HomePagePresenter {
         Runnable mThread = new Runnable() {
             @Override
             public void run() {
-                Log.i(TAG,"I'm in thread running");
-                String message = (String)args[0];
-                int idx = message.indexOf(":");
-                String username = message.substring(0,idx);
-                message = message.substring(idx+1);
+                JSONObject data = (JSONObject) args[0];
+                try {
+                    String username = data.getString("username");
+                    String message = data.getString("message");
 
-                //@TODO add the message to view
-                mView.notifyPrivateMessage(message,username);
+                    Log.d(TAG, "I received the message from: "+username);
+                    mView.notifyPrivateMessage(message, username);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         };
 
@@ -183,18 +185,18 @@ public class HomePagePresenter {
             @Override
             public void run() {
                 Log.i(TAG,"I received a message, in thread running");
-                    JSONObject data = (JSONObject) args[0];
-                    try {
-                        String username = data.getString("username");
-                        String message = data.getString("message");
+                JSONObject data = (JSONObject) args[0];
+                try {
+                    String username = data.getString("username");
+                    String message = data.getString("message");
 
-                        Log.d(TAG, "I received the message from: ");
-                        mView.addOtherMessage(message, username);
+                    Log.d(TAG, "I received the message from: ");
+                    mView.addOtherMessage(message, username);
 
-                    }
-                    catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                }
+                catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         };
 
