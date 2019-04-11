@@ -9,6 +9,7 @@ import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 
 public class HomePagePresenter {
 
@@ -66,13 +67,29 @@ public class HomePagePresenter {
         }
     }
 
-    private void retrieveUsersList(Object[] args) throws Exception {
-        throw new Exception("Error");
-//        Log.d(TAG,(String)args[0]);
+    private void retrieveUsersList(Object[] args) {
+        Runnable mThread = new Runnable() {
+            @Override
+            public void run() {
+
+                mView.addUsersList(new ArrayList<String>());
+            }
+        };
+
+        mView.runThread(mThread);
     }
 
-    private void addJoinedUser(Object[] args) {
-        Log.d(TAG,(String)args[0]);
+    private void addJoinedUser(final Object[] args) {
+        Runnable mThread = new Runnable() {
+            @Override
+            public void run() {
+                String username = (String)args[0];
+
+                mView.addUser(username);
+            }
+        };
+
+        mView.runThread(mThread);
     }
 
     private void receivePrivateMessage(final Object... args) {
