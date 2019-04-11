@@ -1,8 +1,7 @@
-package com.example.texty.HomePage;
+package com.example.texty.PrivateMessage;
 
 import android.util.Log;
 
-import com.example.texty.Utilities.Authenticator;
 import com.example.texty.Utilities.Constants;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;

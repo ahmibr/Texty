@@ -1,4 +1,4 @@
-package com.example.texty.HomePage;
+package com.example.texty.PrivateMessage;
 
 public interface PrivateMessageView {
 
