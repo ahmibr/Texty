@@ -10,6 +10,7 @@ import com.github.nkzawa.socketio.client.Socket;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -81,12 +82,13 @@ public class HomePagePresenter {
             @Override
             public void run() {
                 String username = (String)args[0];
-
+                usersList.remove(username);
                 mView.removeUser(username);
             }
         };
 
         mView.runThread(mThread);
+
     }
 
 
@@ -97,13 +99,13 @@ public class HomePagePresenter {
 
                 usersList.clear();
 
-                JSONArray jsonArray = (JSONArray)args[0];
+                JSONArray data = (JSONArray)args[0];
 
                 Log.d(TAG,"Received users list");
-                for(int i=0;i<jsonArray.length();++i){
+                for(int i=0;i<data.length();++i){
                     try {
-                        usersList.add(jsonArray.getString(i));
-                        Log.d(TAG,jsonArray.getString(i));
+                        usersList.add(data.getString(i));
+                        Log.d(TAG,data.getString(i));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -118,16 +120,17 @@ public class HomePagePresenter {
 
     }
 
-    private List<String> getUsersList(){
+    List<String> getUsersList(){
         return usersList;
     }
+
     private void addJoinedUser(final Object[] args) {
 
         Runnable mThread = new Runnable() {
             @Override
             public void run() {
                 String username = (String)args[0];
-
+                usersList.add(username);
                 mView.addUser(username);
             }
         };
@@ -158,7 +161,7 @@ public class HomePagePresenter {
         if(message.isEmpty())
             return;
 
-        mSocket.emit("chat message", Authenticator.getUsername(mView.getContext()) + ": " +message);
+        mSocket.emit("group message", message);
         mView.addMyMessage(message);
     }
 
@@ -175,30 +178,23 @@ public class HomePagePresenter {
 
     }
 
-    void receiveMessage(final Object... args){
+    void receiveMessage(final Object[] args){
         Runnable mThread = new Runnable() {
             @Override
             public void run() {
-                Log.i(TAG,"I'm in thread running");
-//                            JSONObject data = (JSONObject) args[0];
-                String message = (String)args[0];
-                int idx = message.indexOf(":");
-                String username = message.substring(0,idx);
-                message = message.substring(idx+1);
-//                            mView.printToast(message);
-//                            String messageType;
-//                            try {
-//                                username = data.getString("username");
-//                                message = data.getString("message");
-//                                messageType = data.getString("messageType");
-//                                mView.printToast(message);
-//                            } catch (JSONException e) {
-//                                Log.e(TAG,"An error in parsing JSON");
-//                                return;
-//                            }
+                Log.i(TAG,"I received a message, in thread running");
+                    JSONObject data = (JSONObject) args[0];
+                    try {
+                        String username = data.getString("username");
+                        String message = data.getString("message");
 
-                    Log.d(TAG,"I received the message");
-                    mView.addOtherMessage(message,username);
+                        Log.d(TAG, "I received the message from: ");
+                        mView.addOtherMessage(message, username);
+
+                    }
+                    catch (JSONException e) {
+                        e.printStackTrace();
+                    }
             }
         };
 
