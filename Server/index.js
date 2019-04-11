@@ -3,6 +3,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var userIDs = new Map();
 var usernames = new Map();
+var usersList = [];
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
@@ -15,7 +16,11 @@ io.on('connection', function(socket){
   socket.on('username', function(username){
     userIDs.set(username,socket.id);
     usernames.set(socket.id,username);
-    console.log("IDS");
+    socket.broadcast.emit("user join",username);
+    usersList.push(username);
+    socket.to(socket.id).emit("retrieve list");
+    
+    console.log("IDs");
     console.log(userIDs);
     console.log(usernames);
   });
@@ -25,7 +30,8 @@ io.on('connection', function(socket){
     console.log(username + ' disconnected');
     usernames.delete(socket.id);
     userIDs.delete(username);
-    
+    usersList = usersList.filter(function(value, index, arr){ return value === username;});
+    socket.broadcast.emit("user left",username);
   });
 
   socket.on('chat message', function(msg){

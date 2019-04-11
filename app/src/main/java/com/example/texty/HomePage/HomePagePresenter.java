@@ -37,13 +37,20 @@ public class HomePagePresenter {
 
             Emitter.Listener onPrivateMessage = new Emitter.Listener() {
                 @Override
-                public void call(final Object... args) {
-                    receivePrivateMessage(args);
-                }
-            };
+                public void call(final Object... args) { receivePrivateMessage(args); }};
+
+            Emitter.Listener onUserJoin = new Emitter.Listener() {
+                @Override
+                public void call(final Object... args) { addJoinedUser(args); }};
+
+            Emitter.Listener onRetrieveUserList = new Emitter.Listener() {
+                @Override
+                public void call(final Object... args) { addUsersList(args); }};
 
             mSocket.on("chat message",onNewMessage);
             mSocket.on("private message",onPrivateMessage);
+            mSocket.on("user join",onUserJoin);
+            mSocket.on("retrieve list",onRetrieveUserList);
             mSocket.connect();
             mSocket.emit("username",Authenticator.getUsername(mView.getContext()));
 
@@ -54,6 +61,14 @@ public class HomePagePresenter {
             //Connection error, go out
             Log.e(TAG,"Socket Error");
         }
+    }
+
+    private void addUsersList(Object[] args) {
+        Log.d(TAG,(String)args[0]);
+    }
+
+    private void addJoinedUser(Object[] args) {
+        Log.d(TAG,(String)args[0]);
     }
 
     private void receivePrivateMessage(final Object... args) {
