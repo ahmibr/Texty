@@ -30,7 +30,7 @@
             android:layout_gravity="right"
             android:layout_marginHorizontal="10dp"
             android:background="@drawable/ic_more"
-            android:onClick="viewspinner"
+            android:onClick="onMoreClick"
             android:paddingRight="5dp" />
 
     </Toolbar>
@@ -72,7 +72,7 @@
             android:layout_marginHorizontal="10dp"
             android:background="@drawable/ic_send"
             android:paddingRight="5dp"
-            android:onClick="send"
+            android:onClick="onSendClick"
             android:scaleType="fitCenter" />
     </LinearLayout>
 
