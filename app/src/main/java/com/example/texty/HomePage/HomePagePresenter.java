@@ -8,19 +8,24 @@ import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
+import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class HomePagePresenter {
 
     private Socket mSocket;
     private HomePageView mView;
     private final String TAG = "HomePageActivity";
+    private ArrayList<String> usersList;
 
     HomePagePresenter(HomePageView view){
         mView = view;
+        usersList = new ArrayList<>();
     }
 
     void initializeSocket(){
@@ -37,13 +42,28 @@ public class HomePagePresenter {
 
             Emitter.Listener onPrivateMessage = new Emitter.Listener() {
                 @Override
+                public void call(final Object... args) { receivePrivateMessage(args); }};
+
+            Emitter.Listener onUserJoin = new Emitter.Listener() {
+                @Override
+                public void call(final Object... args) { addJoinedUser(args); }};
+
+            Emitter.Listener onRetrieveUserList = new Emitter.Listener() {
+                @Override
+                public void call(final Object... args) { retrieveUsersList(args);
+                }};
+
+            Emitter.Listener onUserLeave = new Emitter.Listener() {
+                @Override
                 public void call(final Object... args) {
-                    receivePrivateMessage(args);
-                }
-            };
+                    removeLeftUser(args);
+                }};
 
             mSocket.on("chat message",onNewMessage);
             mSocket.on("private message",onPrivateMessage);
+            mSocket.on("user join",onUserJoin);
+            mSocket.on("user leave",onUserLeave);
+            mSocket.on("retrieve list",onRetrieveUserList);
             mSocket.connect();
             mSocket.emit("username",Authenticator.getUsername(mView.getContext()));
 
@@ -54,6 +74,65 @@ public class HomePagePresenter {
             //Connection error, go out
             Log.e(TAG,"Socket Error");
         }
+    }
+
+    private void removeLeftUser(final Object[] args) {
+        Runnable mThread = new Runnable() {
+            @Override
+            public void run() {
+                String username = (String)args[0];
+
+                mView.removeUser(username);
+            }
+        };
+
+        mView.runThread(mThread);
+    }
+
+
+    private void retrieveUsersList(final Object[] args) {
+        Runnable mThread = new Runnable() {
+            @Override
+            public void run() {
+
+                usersList.clear();
+
+                JSONArray jsonArray = (JSONArray)args[0];
+
+                Log.d(TAG,"Received users list");
+                for(int i=0;i<jsonArray.length();++i){
+                    try {
+                        usersList.add(jsonArray.getString(i));
+                        Log.d(TAG,jsonArray.getString(i));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                mView.addUsersList(usersList);
+            }
+        };
+
+        mView.runThread(mThread);
+
+
+    }
+
+    private List<String> getUsersList(){
+        return usersList;
+    }
+    private void addJoinedUser(final Object[] args) {
+
+        Runnable mThread = new Runnable() {
+            @Override
+            public void run() {
+                String username = (String)args[0];
+
+                mView.addUser(username);
+            }
+        };
+
+        mView.runThread(mThread);
     }
 
     private void receivePrivateMessage(final Object... args) {

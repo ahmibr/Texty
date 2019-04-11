@@ -6,8 +6,10 @@ const router = express.Router();
 
 var exports = module.exports = {};
 exports.User = null;
+exports.Conversation = null;
+exports.Message = null;
 
-
+// auth routes
 router.post('/signin', function (req, res){
     req.checkBody('username', 'name cannot be empty').notEmpty();
     req.checkBody('username', 'name be at least 4 characters').isLength({min: 4});
@@ -301,5 +303,7 @@ router.post('/reset', function (req, res) {
         });
     }
 });
+
+// chat routes
 
 exports.Router = router;

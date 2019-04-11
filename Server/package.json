@@ -7,14 +7,15 @@
     "start": "node index.js"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
     "dotenv": "^6.0.0",
     "express": "^4.16.4",
-    "body-parser": "^1.18.3",
     "express-validator": "^5.3.0",
-    "socket.io": "^2.2.0",
-    "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^8.3.0",
+    "mongoose": "^5.5.0",
     "mysql2": "^1.6.1",
-    "sequelize": "^4.38.1"
+    "sequelize": "^4.38.1",
+    "socket.io": "^2.2.0"
   }
 }

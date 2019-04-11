@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -64,19 +65,21 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
         }
     }
 
-    public void send(View v){
+    public void onSendClick(View v){
         String message = ((EditText)findViewById(R.id.Message)).getText().toString();
         ((EditText)findViewById(R.id.Message)).getText().clear();
         mPresenter.sendMessage(message);
-//        mPresenter.sendMessage(message);
-
     }
-    public void viewspinner(View v)
+    public void onMoreClick(View v)
     {
         PopupMenu popup = new PopupMenu(this, v);
         popup.setOnMenuItemClickListener(this);
         popup.inflate(R.menu.popup_menu);
+
+        popup.getMenu().add("1");
+        popup.getMenu().add("2");
         popup.show();
+
     }
 
 
@@ -118,16 +121,17 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
 
     @Override
     public void addMyMessage(String message) {
-        Message m = new Message(my_name,message,true);
+        Message m = new Message(my_name,message,1);
         arrayList.add(m);
         messageadapter.notifyDataSetChanged();
         ListView list = (ListView)findViewById(R.id.messages_view);
         list.setSelection(list.getCount() - 1);
     }
 
+
     @Override
     public void addOtherMessage(String message, String username) {
-        Message m = new Message(username,message,false);
+        Message m = new Message(username,message,2);
         arrayList.add(m);
         messageadapter.notifyDataSetChanged();
         ListView list = (ListView)findViewById(R.id.messages_view);
@@ -156,6 +160,29 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
         nm.notify(1,notification.build());
     }
 
+    @Override
+    public void addUsersList(List<String> usersList) {
+
+    }
+
+    @Override
+    public void addUser(String username) {
+        Message m = new Message(username,username+" joined",3);
+        arrayList.add(m);
+        messageadapter.notifyDataSetChanged();
+        ListView list = (ListView)findViewById(R.id.messages_view);
+        list.setSelection(list.getCount() - 1);
+    }
+
+    @Override
+    public void removeUser(String username) {
+        Message m = new Message(username,username+" quited",3);
+        arrayList.add(m);
+        messageadapter.notifyDataSetChanged();
+        ListView list = (ListView)findViewById(R.id.messages_view);
+        list.setSelection(list.getCount() - 1);
+        //TODO remove from list of users
+    }
     @Override
     public Context getContext() {
         return getApplicationContext();
