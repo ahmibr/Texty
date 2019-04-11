@@ -43,17 +43,19 @@ public class HomePagePresenter {
 
             Emitter.Listener onRetrieveUserList = new Emitter.Listener() {
                 @Override
+                public void call(final Object... args) { retrieveUsersList(args);
+                }};
+
+            Emitter.Listener onUserLeave = new Emitter.Listener() {
+                @Override
                 public void call(final Object... args) {
-                    try {
-                        retrieveUsersList(args);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    removeLeftUser(args);
                 }};
 
             mSocket.on("chat message",onNewMessage);
             mSocket.on("private message",onPrivateMessage);
             mSocket.on("user join",onUserJoin);
+            mSocket.on("user leave",onUserLeave);
             mSocket.on("retrieve list",onRetrieveUserList);
             mSocket.connect();
             mSocket.emit("username",Authenticator.getUsername(mView.getContext()));
@@ -67,13 +69,26 @@ public class HomePagePresenter {
         }
     }
 
+    private void removeLeftUser(final Object[] args) {
+        Runnable mThread = new Runnable() {
+            @Override
+            public void run() {
+                String username = (String)args[0];
 
-    private void retrieveUsersList(Object[] args) {
+                mView.removeUser(username);
+            }
+        };
+
+        mView.runThread(mThread);
+    }
+
+
+    private void retrieveUsersList(final Object[] args) {
         Runnable mThread = new Runnable() {
             @Override
             public void run() {
 
-                mView.addUsersList(new ArrayList<String>());
+                Log.d(TAG,(String)args[0]);
             }
         };
 
@@ -81,6 +96,7 @@ public class HomePagePresenter {
     }
 
     private void addJoinedUser(final Object[] args) {
+
         Runnable mThread = new Runnable() {
             @Override
             public void run() {

@@ -33,7 +33,7 @@ io.on('connection', function(socket){
     usernames.delete(socket.id);
     userIDs.delete(username);
     usersList = usersList.filter(function(value, index, arr){ return value === username;});
-    socket.broadcast.emit("user left",username);
+    socket.broadcast.emit("user leave",username);
   });
 
   socket.on('chat message', function(msg){
