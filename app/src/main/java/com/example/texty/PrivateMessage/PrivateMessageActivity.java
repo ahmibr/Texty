@@ -33,7 +33,7 @@ public class PrivateMessageActivity extends AppCompatActivity implements Private
         super.onCreate(savedInstanceState);
         setContentView(R.layout.homepage);
         String to = getIntent().getStringExtra("username");
-        //Toast.makeText(getApplicationContext(), to, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), to, Toast.LENGTH_LONG).show();
 
 
         arrayList = new ArrayList<Message>();

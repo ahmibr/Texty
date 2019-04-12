@@ -120,7 +120,8 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
 
     @Override
     public void notifyPrivateMessage(String message, String username) {
-        Intent privateMessage = new Intent(getApplicationContext(), PrivateMessageActivity.class);
+        Log.d(TAG,username);
+        Intent privateMessage = new Intent(this, PrivateMessageActivity.class);
         privateMessage.putExtra("username",username);
 
         NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext(),username);

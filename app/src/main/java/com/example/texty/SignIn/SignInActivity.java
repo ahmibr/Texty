@@ -57,7 +57,6 @@ public class SignInActivity extends AppCompatActivity {
             startActivity(homepageIntent);
             finish();
         }
-
     }
 }
 
