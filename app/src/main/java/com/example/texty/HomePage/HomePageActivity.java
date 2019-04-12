@@ -173,6 +173,7 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
 
     @Override
     public void onSendClick(View v) {
+        Toast.makeText(getApplicationContext(), "ana d5lt onsendClick", Toast.LENGTH_SHORT).show();
         String message = ((EditText)findViewById(R.id.Message)).getText().toString();
         ((EditText)findViewById(R.id.Message)).getText().clear();
         mPresenter.sendMessage(message);
