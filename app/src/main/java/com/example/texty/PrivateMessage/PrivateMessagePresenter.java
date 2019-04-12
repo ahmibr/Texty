@@ -55,8 +55,10 @@ public class PrivateMessagePresenter {
 
 
         try {
+            Log.d(TAG,"I sent message");
             dataSent.put("to",to);
             dataSent.put("message",message);
+            Log.d(TAG,dataSent.toString());
             mSocket.emit("private message", dataSent);
             mView.addMyMessage(message);
         } catch (JSONException e) {
@@ -87,7 +89,7 @@ public class PrivateMessagePresenter {
                 }
             }
         };
-
+        Log.d(TAG,"I recieved private message");
         mView.runThread(mThread);
     }
 }

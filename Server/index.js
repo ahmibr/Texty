@@ -70,7 +70,7 @@ io.on('connection', function(socket){
     if(userIDs.has(to)){
       var dataSent = {"username":username,"message":message};
 
-      io.to(to).emit('private message', dataSent);
+      io.to(userIDs.get(to)).emit('private message', dataSent);
     }
     console.log('message: ' + message);
   });

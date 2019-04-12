@@ -36,8 +36,6 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
 
     private MessagesListAdapter messageadapter;
     private List<Message> arrayList;
-
-    private String my_name ="reem ";
     private final String TAG = "HomePageActivity";
     private HomePagePresenter mPresenter;
     private MediaPlayer notificationSound;
@@ -84,12 +82,14 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
     protected void onPause() {
         super.onPause();
         Log.d(TAG,"Main paused");
+        mPresenter.onHomePagePause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         Log.d(TAG,"Main resumed");
+        mPresenter.onHomePageResume();
     }
 
     @Override
