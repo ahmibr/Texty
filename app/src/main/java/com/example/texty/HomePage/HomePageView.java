@@ -1,6 +1,7 @@
 package com.example.texty.HomePage;
 
 import android.content.Context;
+import android.view.View;
 
 import java.util.List;
 
@@ -13,5 +14,7 @@ public interface HomePageView {
     void addUsersList(List<String> usersList);
     void addUser(String username);
     void removeUser(String username);
+    void onSendClick(View v);
+    void onMoreClick(View v);
     Context getContext();
 }

@@ -32,22 +32,24 @@ public class PrivateMessageActivity extends AppCompatActivity implements Private
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.homepage);
-        String to = Authenticator.getUsername(getApplicationContext());
+        String to = getIntent().getStringExtra("username");
+        //Toast.makeText(getApplicationContext(), to, Toast.LENGTH_LONG).show();
+
 
         arrayList = new ArrayList<Message>();
         messageadapter = new MessagesListAdapter(this, arrayList);
         ListView list = (ListView) findViewById(R.id.messages_view);
         list.setAdapter(messageadapter);
+
         mPresenter = new PrivateMessagePresenter(this, to);
         TextView header = (TextView) findViewById(R.id.header);
         header.setText(to);
-       // Toast.makeText(getApplicationContext(), "Hello " + Authenticator.getUsername(getApplicationContext()), Toast.LENGTH_LONG).show();
 
     }
 
     @Override
     public void notifyPrivateMessage(String message, String username) {
-
+        // TODO Error Message that he is in private message
     }
 
     @Override
@@ -57,11 +59,28 @@ public class PrivateMessageActivity extends AppCompatActivity implements Private
 
     @Override
     public void addMyMessage(String message) {
-        Message m = new Message("reem", message, 1);
+        Message m = new Message(myname, message, 1);
         arrayList.add(m);
         messageadapter.notifyDataSetChanged();
         ListView list = (ListView) findViewById(R.id.messages_view);
         list.setSelection(list.getCount() - 1);
+    }
+
+    @Override
+    public void onSendClick(View v) {
+        String message = ((EditText) findViewById(R.id.Message)).getText().toString();
+        ((EditText) findViewById(R.id.Message)).getText().clear();
+        Toast.makeText(getApplicationContext(),message,Toast.LENGTH_LONG).show();
+        mPresenter.sendMessage(message);
+    }
+
+    @Override
+    public void onMoreClick(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        popup.setOnMenuItemClickListener(this);
+        popup.inflate(R.menu.popup_menu);
+        popup.getMenu().add(1, 1, 1, "Back");
+        popup.show();
     }
 
     @Override
@@ -73,21 +92,7 @@ public class PrivateMessageActivity extends AppCompatActivity implements Private
         list.setSelection(list.getCount() - 1);
     }
 
-    public void onSendClick(View v) {
-        String message = ((EditText) findViewById(R.id.Message)).getText().toString();
-        ((EditText) findViewById(R.id.Message)).getText().clear();
-        Toast.makeText(getApplicationContext(),message,Toast.LENGTH_LONG).show();
-       // mPresenter.sendMessage(message);
-    }
 
-    public void onMoreClick(View v) {
-        PopupMenu popup = new PopupMenu(this, v);
-        popup.setOnMenuItemClickListener(this);
-        popup.inflate(R.menu.popup_menu);
-        popup.getMenu().add(1, 1, 1, "Back");
-        popup.show();
-
-    }
 
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {

@@ -67,36 +67,7 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
         }
     }
 
-    public void onSendClick(View v){
-        String message = ((EditText)findViewById(R.id.Message)).getText().toString();
-        ((EditText)findViewById(R.id.Message)).getText().clear();
-        mPresenter.sendMessage(message);
-    }
-    public void onMoreClick(View v)
-    {
-        PopupMenu popup = new PopupMenu(this, v);
-        popup.setOnMenuItemClickListener(this);
-        popup.inflate(R.menu.popup_menu);
-        Menu menu = popup.getMenu();
-        SubMenu Menu = menu.addSubMenu(1,0,1,"Members");
-        List<String> users = mPresenter.getUsersList();
-        for (int i=0;i<users.size();i++){
-            Menu.add(1,i+1,1,users.get(i));
-        }
-        popup.show();
 
-    }
-  /*  void trailadd(SubMenu m){
-        //Log.d(TAG,m.getItem(1).getTitle().toString());
-        int i = 1;
-        String r = "Reem";
-        while(m.getItem(i).getTitle().toString().equals(r)){
-            Log.d(TAG,m.getItem(i).getTitle().toString());
-            i++;
-        }
-        m.removeItem(i);
-
-    }*/
 
     void reSignIn(){
         Intent signInIntent = new Intent(this, SignInActivity.class);
@@ -156,8 +127,8 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
 
     @Override
     public void notifyPrivateMessage(String message, String username) {
-        Intent i = new Intent(getApplicationContext(), Test.class);
-        i.putExtra("username",username);
+        Intent private_message = new Intent(getApplicationContext(), PrivateMessageActivity.class);
+        private_message.putExtra("username",username);
 
         NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext(),username);
         notification.setContentTitle("New message from "+username);
@@ -197,6 +168,32 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
         ListView list = (ListView)findViewById(R.id.messages_view);
         list.setSelection(list.getCount() - 1);
     }
+
+
+
+    @Override
+    public void onSendClick(View v) {
+        String message = ((EditText)findViewById(R.id.Message)).getText().toString();
+        ((EditText)findViewById(R.id.Message)).getText().clear();
+        mPresenter.sendMessage(message);
+
+    }
+
+    @Override
+    public void onMoreClick(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        popup.setOnMenuItemClickListener(this);
+        popup.inflate(R.menu.popup_menu);
+        Menu menu = popup.getMenu();
+        SubMenu Menu = menu.addSubMenu(1,0,1,"Members");
+        List<String> users = mPresenter.getUsersList();
+        for (int i=0;i<users.size();i++){
+            Menu.add(1,i+1,1,users.get(i));
+        }
+        popup.show();
+
+    }
+
     @Override
     public Context getContext() {
         return getApplicationContext();
@@ -214,6 +211,7 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
                 //printToast("item members is clicked");
                 return false;
             default:
+
                 Intent private_message = new Intent(getApplicationContext(), PrivateMessageActivity.class);
                 private_message.putExtra("username",menuItem.getTitle().toString());
                 startActivity(private_message);

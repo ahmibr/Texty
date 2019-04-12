@@ -53,7 +53,6 @@ public class SignInActivity extends AppCompatActivity {
         //TODO Validation For Password too
         if (valid){
             Authenticator.setUsername(SignInActivity.this,userName);
-
             Intent homepageIntent = new Intent(SignInActivity.this, HomePageActivity.class);
             startActivity(homepageIntent);
             finish();
