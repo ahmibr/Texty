@@ -54,7 +54,7 @@ public class PrivateMessageActivity extends AppCompatActivity implements Private
 
     @Override
     public void runThread(Runnable thread) {
-
+        runOnUiThread(thread);
     }
 
     @Override

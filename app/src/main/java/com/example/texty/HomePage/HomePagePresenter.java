@@ -24,6 +24,12 @@ public class HomePagePresenter {
     private final String TAG = "HomePageActivity";
     private ArrayList<String> usersList;
     private String myUserName;
+    private Emitter.Listener onNewMessage = null;
+    private Emitter.Listener onPrivateMessage = null;
+    private Emitter.Listener onUserJoin = null;
+    private Emitter.Listener onRetrieveUserList = null;
+    private Emitter.Listener onUserLeave = null;
+
     HomePagePresenter(HomePageView view){
         mView = view;
         usersList = new ArrayList<>();
@@ -31,7 +37,7 @@ public class HomePagePresenter {
             myUserName = Authenticator.getUsername(mView.getContext());
             initializeSocket();
             initializeChat();
-
+            mView.greetUser(myUserName);
         }
         else{
             mView.reSignIn();
@@ -43,27 +49,27 @@ public class HomePagePresenter {
         try {
             mSocket = IO.socket(Constants.CHAT_ROOM_API);
 
-            Emitter.Listener onNewMessage = new Emitter.Listener() {
+            onNewMessage = new Emitter.Listener() {
                 @Override
                 public void call(final Object... args) {
                     receiveMessage(args);
                 }
             };
 
-            Emitter.Listener onPrivateMessage = new Emitter.Listener() {
+            onPrivateMessage = new Emitter.Listener() {
                 @Override
                 public void call(final Object... args) { receivePrivateMessage(args); }};
 
-            Emitter.Listener onUserJoin = new Emitter.Listener() {
+            onUserJoin = new Emitter.Listener() {
                 @Override
                 public void call(final Object... args) { addJoinedUser(args); }};
 
-            Emitter.Listener onRetrieveUserList = new Emitter.Listener() {
+            onRetrieveUserList = new Emitter.Listener() {
                 @Override
                 public void call(final Object... args) { retrieveUsersList(args);
                 }};
 
-            Emitter.Listener onUserLeave = new Emitter.Listener() {
+            onUserLeave = new Emitter.Listener() {
                 @Override
                 public void call(final Object... args) {
                     removeLeftUser(args);
@@ -75,7 +81,7 @@ public class HomePagePresenter {
             mSocket.on("user leave",onUserLeave);
             mSocket.on("retrieve list",onRetrieveUserList);
             mSocket.connect();
-            mSocket.emit("username",Authenticator.getUsername(mView.getContext()));
+            mSocket.emit("username",myUserName);
 
             Log.d(TAG,"Started socket successfully");
 
@@ -93,7 +99,6 @@ public class HomePagePresenter {
                 String username = (String)args[0];
                 usersList.remove(username);
                 mView.removeUser(username);
-                usersList.remove(username);
             }
         };
 
@@ -142,7 +147,6 @@ public class HomePagePresenter {
                 String username = (String)args[0];
                 usersList.add(username);
                 mView.addUser(username);
-                usersList.add(username);
             }
         };
 
@@ -158,7 +162,7 @@ public class HomePagePresenter {
                     String username = data.getString("username");
                     String message = data.getString("message");
 
-                    Log.d(TAG, "I received the message from: "+username);
+                    Log.d(TAG, "I'm in home and received the message from: "+username);
                     mView.notifyPrivateMessage(message, username);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -167,6 +171,14 @@ public class HomePagePresenter {
         };
 
         mView.runThread(mThread);
+    }
+
+    void onHomePagePause(){
+        mSocket.off("private message");
+    }
+
+    void onHomePageResume(){
+        mSocket.on("private message",onPrivateMessage);
     }
 
     void sendMessage(String message){
