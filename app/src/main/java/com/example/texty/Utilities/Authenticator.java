@@ -8,6 +8,7 @@ public class Authenticator {
 
     static private final String PREF_USERNAME = "username";
     static private final String PREF_TOKEN = "token";
+    static private final String PREF_MYNAME = "myname";
 
     static private SharedPreferences getSharedPreferences(Context ctx) {
         return PreferenceManager.getDefaultSharedPreferences(ctx);

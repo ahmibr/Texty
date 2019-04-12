@@ -21,6 +21,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.example.texty.PrivateMessage.PrivateMessageActivity;
 import com.example.texty.R;
 import com.example.texty.SignIn.SignInActivity;
 import com.example.texty.Utilities.Authenticator;
@@ -194,7 +196,6 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
         messageadapter.notifyDataSetChanged();
         ListView list = (ListView)findViewById(R.id.messages_view);
         list.setSelection(list.getCount() - 1);
-        //TODO remove from list of users
     }
     @Override
     public Context getContext() {
@@ -208,7 +209,14 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
             case R.id.Log_Out:
                 printToast("item 2 is clicked");
                 return true;
+
+            case 0:
+                //printToast("item members is clicked");
+                return false;
             default:
+                Intent private_message = new Intent(getApplicationContext(), PrivateMessageActivity.class);
+                private_message.putExtra("username",menuItem.getTitle().toString());
+                startActivity(private_message);
                 printToast(menuItem.getTitle().toString());
                 return true;
 
