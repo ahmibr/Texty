@@ -22,6 +22,7 @@ public class PrivateMessagePresenter {
     PrivateMessagePresenter(PrivateMessageView view,String to){
         mView = view;
         this.to = to;
+        initializeSocket();
     }
 
     void initializeSocket(){
