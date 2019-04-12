@@ -23,13 +23,15 @@ public class HomePagePresenter {
     private HomePageView mView;
     private final String TAG = "HomePageActivity";
     private ArrayList<String> usersList;
-
+    private String myUserName;
     HomePagePresenter(HomePageView view){
         mView = view;
         usersList = new ArrayList<>();
         if(isLoggedIn()) {
+            myUserName = Authenticator.getUsername(mView.getContext());
             initializeSocket();
             initializeChat();
+
         }
         else{
             mView.reSignIn();
@@ -173,7 +175,7 @@ public class HomePagePresenter {
             return;
 
         mSocket.emit("group message", message);
-        mView.addMyMessage(message);
+        mView.addMyMessage(message,myUserName);
     }
 
     void initializeChat(){
