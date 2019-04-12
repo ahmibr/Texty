@@ -132,7 +132,6 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
         notification.setSmallIcon(R.drawable.circle);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, privateMessage, 0);
-
         notification.setContentIntent(pendingIntent);
 
         NotificationManager nm = (NotificationManager)getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
