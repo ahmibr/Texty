@@ -28,7 +28,7 @@ public class PrivateMessagePresenter {
         //@TODO get server link from DB
         try {
             mSocket = IO.socket(Constants.CHAT_ROOM_API);
-            
+
             Emitter.Listener onPrivateMessage = new Emitter.Listener() {
                 @Override
                 public void call(final Object... args) { receivePrivateMessage(args); }};

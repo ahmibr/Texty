@@ -127,8 +127,8 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
 
     @Override
     public void notifyPrivateMessage(String message, String username) {
-        Intent private_message = new Intent(getApplicationContext(), PrivateMessageActivity.class);
-        private_message.putExtra("username",username);
+        Intent privateMessage = new Intent(getApplicationContext(), PrivateMessageActivity.class);
+        privateMessage.putExtra("username",username);
 
         NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext(),username);
         notification.setContentTitle("New message from "+username);
@@ -138,7 +138,7 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
         notification.setAutoCancel(true);
         notification.setSmallIcon(R.drawable.circle);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, i, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, privateMessage, 0);
 
         notification.setContentIntent(pendingIntent);
 
