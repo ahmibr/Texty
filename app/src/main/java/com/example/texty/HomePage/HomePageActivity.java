@@ -120,8 +120,9 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
 
     @Override
     public void notifyPrivateMessage(String message, String username) {
-        Intent privateMessage = new Intent(getApplicationContext(), PrivateMessageActivity.class);
-        privateMessage.putExtra("username",username);
+        Log.d(TAG,"Ya rab ab3at l "+username);
+        Intent privateMessage = new Intent(this, PrivateMessageActivity.class);
+        privateMessage.putExtra("to",username);
 
         NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext(),username);
         notification.setContentTitle("New message from "+username);
@@ -131,11 +132,12 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
         notification.setAutoCancel(true);
         notification.setSmallIcon(R.drawable.circle);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, privateMessage, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, username.hashCode(), privateMessage, PendingIntent.FLAG_UPDATE_CURRENT);
+
         notification.setContentIntent(pendingIntent);
 
         NotificationManager nm = (NotificationManager)getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        nm.notify(1,notification.build());
+        nm.notify(username.hashCode(),notification.build());
     }
 
     @Override
@@ -206,7 +208,7 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
             default:
 
                 Intent private_message = new Intent(getApplicationContext(), PrivateMessageActivity.class);
-                private_message.putExtra("username",menuItem.getTitle().toString());
+                private_message.putExtra("to",menuItem.getTitle().toString());
                 startActivity(private_message);
                 printToast(menuItem.getTitle().toString());
                 return true;
