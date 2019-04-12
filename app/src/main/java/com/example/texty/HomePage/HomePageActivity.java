@@ -53,26 +53,19 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
         mPresenter = new HomePagePresenter(this);
 
         notificationSound = MediaPlayer.create(this, R.raw.notification);
-
-        if(!mPresenter.IsLoggedIn())
-        {
-            reSignIn();
-        }
-        else {
-            mPresenter.initializeSocket();
-            mPresenter.initializeChat();
-            my_name = Authenticator.getUsername(getApplicationContext());
-            Toast.makeText(getApplicationContext(), "Hello " + Authenticator.getUsername(getApplicationContext()), Toast.LENGTH_LONG).show();
-
-        }
     }
 
 
 
-    void reSignIn(){
+    public void reSignIn(){
         Intent signInIntent = new Intent(this, SignInActivity.class);
         startActivity(signInIntent);
         finish();
+    }
+
+    @Override
+    public void greetUser(String username) {
+        Toast.makeText(getApplicationContext(), "Hello " + username, Toast.LENGTH_LONG).show();
     }
 
 
@@ -106,8 +99,8 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
     }
 
     @Override
-    public void addMyMessage(String message) {
-        Message m = new Message(my_name,message,1);
+    public void addMyMessage(String message,String myUsername) {
+        Message m = new Message(myUsername,message,1);
         arrayList.add(m);
         messageadapter.notifyDataSetChanged();
         ListView list = (ListView)findViewById(R.id.messages_view);

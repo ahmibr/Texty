@@ -27,6 +27,13 @@ public class HomePagePresenter {
     HomePagePresenter(HomePageView view){
         mView = view;
         usersList = new ArrayList<>();
+        if(isLoggedIn()) {
+            initializeSocket();
+            initializeChat();
+        }
+        else{
+            mView.reSignIn();
+        }
     }
 
     void initializeSocket(){
@@ -208,7 +215,7 @@ public class HomePagePresenter {
 
         mView.runThread(mThread);
     }
-    public boolean IsLoggedIn() {
+    public boolean isLoggedIn() {
         return Authenticator.isLoggedIn(mView.getContext());
     }
 
