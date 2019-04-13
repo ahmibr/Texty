@@ -1,12 +1,16 @@
 package com.example.texty.PrivateMessage;
-import com.example.texty.HomePage.HomePagePresenter;
 import com.example.texty.HomePage.Message;
 import com.example.texty.HomePage.MessagesListAdapter;
 import com.example.texty.R;
-import com.example.texty.Utilities.Authenticator;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.view.MenuItem;
@@ -25,7 +29,6 @@ public class PrivateMessageActivity extends AppCompatActivity implements Private
     private List<Message> arrayList;
     private PrivateMessagePresenter mPresenter;
     private MediaPlayer notificationSound;
-    String myname="lazem yt3ml ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +48,34 @@ public class PrivateMessageActivity extends AppCompatActivity implements Private
         TextView header = (TextView) findViewById(R.id.header);
         header.setText(to);
 
+        notificationSound = MediaPlayer.create(this, R.raw.notificationprivate);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
     }
 
     @Override
     public void notifyPrivateMessage(String message, String username) {
-        // TODO Error Message that he is in private message
+        Intent privateMessage = new Intent(this, PrivateMessageActivity.class);
+        privateMessage.putExtra("to",username);
+
+        NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext(),username);
+        notification.setContentTitle("New message from "+username);
+        notification.setContentText(message);
+        notification.setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND);
+        notification.setWhen(System.currentTimeMillis());
+        notification.setAutoCancel(true);
+        notification.setSmallIcon(R.drawable.circle);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, username.hashCode(), privateMessage, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        notification.setContentIntent(pendingIntent);
+
+        NotificationManager nm = (NotificationManager)getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        nm.notify(username.hashCode(),notification.build());
     }
 
     @Override
@@ -58,8 +84,13 @@ public class PrivateMessageActivity extends AppCompatActivity implements Private
     }
 
     @Override
-    public void addMyMessage(String message) {
-        Message m = new Message(myname, message, 1);
+    public Context getContext() {
+        return getApplicationContext();
+    }
+
+    @Override
+    public void addMyMessage(String message,String username) {
+        Message m = new Message(username, message, 1);
         arrayList.add(m);
         messageadapter.notifyDataSetChanged();
         ListView list = (ListView) findViewById(R.id.messages_view);
@@ -90,6 +121,7 @@ public class PrivateMessageActivity extends AppCompatActivity implements Private
         messageadapter.notifyDataSetChanged();
         ListView list = (ListView) findViewById(R.id.messages_view);
         list.setSelection(list.getCount() - 1);
+        notificationSound.start();
     }
 
 

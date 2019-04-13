@@ -2,6 +2,7 @@ package com.example.texty.PrivateMessage;
 
 import android.util.Log;
 
+import com.example.texty.Utilities.Authenticator;
 import com.example.texty.Utilities.Constants;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
@@ -17,11 +18,13 @@ public class PrivateMessagePresenter {
     private PrivateMessageView mView;
     private String to;
     private Socket mSocket;
+    private String myUsername;
     private final String TAG = "PrivateMessagePresenter";
     
     PrivateMessagePresenter(PrivateMessageView view,String to){
         mView = view;
         this.to = to;
+        myUsername = Authenticator.getUsername(mView.getContext());
         initializeSocket();
     }
 
@@ -60,7 +63,7 @@ public class PrivateMessagePresenter {
             dataSent.put("message",message);
             Log.d(TAG,dataSent.toString());
             mSocket.emit("private message", dataSent);
-            mView.addMyMessage(message);
+            mView.addMyMessage(message,myUsername);
         } catch (JSONException e) {
             e.printStackTrace();
         }
