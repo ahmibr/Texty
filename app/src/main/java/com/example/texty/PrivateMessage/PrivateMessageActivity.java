@@ -8,6 +8,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
@@ -15,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,7 +25,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PrivateMessageActivity extends AppCompatActivity implements PrivateMessageView, PopupMenu.OnMenuItemClickListener {
+public class PrivateMessageActivity extends AppCompatActivity implements PrivateMessageView {
 
     private MessagesListAdapter messageadapter;
     private List<Message> arrayList;
@@ -47,7 +49,8 @@ public class PrivateMessageActivity extends AppCompatActivity implements Private
         mPresenter = new PrivateMessagePresenter(this, to);
         TextView header = (TextView) findViewById(R.id.header);
         header.setText(to);
-
+        Button More = (Button) findViewById(R.id.more);
+        More.setVisibility(View.GONE);
         notificationSound = MediaPlayer.create(this, R.raw.notificationprivate);
     }
 
@@ -60,10 +63,10 @@ public class PrivateMessageActivity extends AppCompatActivity implements Private
     @Override
     public void notifyPrivateMessage(String message, String username) {
         Intent privateMessage = new Intent(this, PrivateMessageActivity.class);
-        privateMessage.putExtra("to",username);
+        privateMessage.putExtra("to", username);
 
-        NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext(),username);
-        notification.setContentTitle("New message from "+username);
+        NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext(), username);
+        notification.setContentTitle("New message from " + username);
         notification.setContentText(message);
         notification.setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND);
         notification.setWhen(System.currentTimeMillis());
@@ -74,8 +77,8 @@ public class PrivateMessageActivity extends AppCompatActivity implements Private
 
         notification.setContentIntent(pendingIntent);
 
-        NotificationManager nm = (NotificationManager)getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        nm.notify(username.hashCode(),notification.build());
+        NotificationManager nm = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        nm.notify(username.hashCode(), notification.build());
     }
 
     @Override
@@ -89,7 +92,7 @@ public class PrivateMessageActivity extends AppCompatActivity implements Private
     }
 
     @Override
-    public void addMyMessage(String message,String username) {
+    public void addMyMessage(String message, String username) {
         Message m = new Message(username, message, 1);
         arrayList.add(m);
         messageadapter.notifyDataSetChanged();
@@ -101,18 +104,10 @@ public class PrivateMessageActivity extends AppCompatActivity implements Private
     public void onSendClick(View v) {
         String message = ((EditText) findViewById(R.id.Message)).getText().toString();
         ((EditText) findViewById(R.id.Message)).getText().clear();
-        Toast.makeText(getApplicationContext(),message,Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
         mPresenter.sendMessage(message);
     }
 
-    @Override
-    public void onMoreClick(View v) {
-        PopupMenu popup = new PopupMenu(this, v);
-        popup.setOnMenuItemClickListener(this);
-        popup.inflate(R.menu.popup_menu);
-        popup.getMenu().add(1, 1, 1, "Back");
-        popup.show();
-    }
 
     @Override
     public void addOtherMessage(String message, String username) {
@@ -125,18 +120,4 @@ public class PrivateMessageActivity extends AppCompatActivity implements Private
     }
 
 
-
-    @Override
-    public boolean onMenuItemClick(MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case R.id.Log_Out:
-                Toast.makeText(getApplicationContext(), "LOG_OUT", Toast.LENGTH_LONG).show();
-                return true;
-            case 1:
-                Toast.makeText(getApplicationContext(), "BACK", Toast.LENGTH_LONG).show();
-                return false;
-            default:
-                return false;
-        }
-    }
 }

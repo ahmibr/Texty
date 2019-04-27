@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.texty.HomePage.HomePageActivity;
 import com.example.texty.R;
@@ -24,8 +25,6 @@ public class SignInActivity extends AppCompatActivity {
     public void SignUp(View v) {
 
         String userName = ((EditText) findViewById(R.id.usernameText)).getText().toString();
-//        Authenticator.setUserName(SignInActivity.this,userName);
-
         Intent signupIntent = new Intent(SignInActivity.this, SignUpActivity.class);
         startActivity(signupIntent);
         finish();
@@ -54,6 +53,7 @@ public class SignInActivity extends AppCompatActivity {
         if (valid){
             Authenticator.setUsername(SignInActivity.this,userName);
             Intent homepageIntent = new Intent(SignInActivity.this, HomePageActivity.class);
+            Toast.makeText(getApplicationContext(), "Hello " + userName, Toast.LENGTH_LONG).show();
             startActivity(homepageIntent);
             finish();
         }

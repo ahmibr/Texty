@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ListView;
@@ -30,7 +32,7 @@ import com.example.texty.Utilities.Authenticator;
 import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.ToLongBiFunction;
+
 
 public class HomePageActivity extends AppCompatActivity implements HomePageView, PopupMenu.OnMenuItemClickListener {
 
@@ -39,7 +41,6 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
     private final String TAG = "HomePageActivity";
     private HomePagePresenter mPresenter;
     private MediaPlayer notificationSound;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +50,6 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
         ListView list = (ListView)findViewById(R.id.messages_view);
         list.setAdapter(messageadapter);
         mPresenter = new HomePagePresenter(this);
-
         notificationSound = MediaPlayer.create(this, R.raw.notification);
     }
 
@@ -166,14 +166,12 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
 
     @Override
     public void onSendClick(View v) {
-        Toast.makeText(getApplicationContext(), "ana d5lt onsendClick", Toast.LENGTH_SHORT).show();
         String message = ((EditText)findViewById(R.id.Message)).getText().toString();
         ((EditText)findViewById(R.id.Message)).getText().clear();
         mPresenter.sendMessage(message);
 
     }
 
-    @Override
     public void onMoreClick(View v) {
         PopupMenu popup = new PopupMenu(this, v);
         popup.setOnMenuItemClickListener(this);
@@ -198,18 +196,16 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
         List<String> users = mPresenter.getUsersList();
         switch (menuItem.getItemId()) {
             case R.id.Log_Out:
-                printToast("item 2 is clicked");
+                mPresenter.logOut();
+                Intent sign_in = new Intent(getApplicationContext(), SignInActivity.class);
+                startActivity(sign_in);
                 return true;
-
             case 0:
-                //printToast("item members is clicked");
                 return false;
             default:
-
                 Intent private_message = new Intent(getApplicationContext(), PrivateMessageActivity.class);
                 private_message.putExtra("to",menuItem.getTitle().toString());
                 startActivity(private_message);
-                printToast(menuItem.getTitle().toString());
                 return true;
 
         }

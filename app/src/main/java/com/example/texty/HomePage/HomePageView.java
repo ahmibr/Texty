@@ -17,6 +17,5 @@ interface HomePageView {
     void reSignIn();
     void greetUser(String username);
     void onSendClick(View v);
-    void onMoreClick(View v);
     Context getContext();
 }
