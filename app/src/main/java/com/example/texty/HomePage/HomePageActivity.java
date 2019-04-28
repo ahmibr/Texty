@@ -107,7 +107,6 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
         list.setSelection(list.getCount() - 1);
     }
 
-
     @Override
     public void addOtherMessage(String message, String username) {
         Message m = new Message(username,message,2);
