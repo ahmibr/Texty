@@ -10,6 +10,5 @@ public interface PrivateMessageView {
     Context getContext();
     void addMyMessage(String message,String username);
     void onSendClick(View v);
-    void onMoreClick(View v);
     void addOtherMessage(String message, String username);
 }

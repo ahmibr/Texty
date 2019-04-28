@@ -172,6 +172,8 @@ public class HomePagePresenter {
 
         mView.runThread(mThread);
     }
+    void logOut(){ // TODO Ahmed CAll Function of Authenticator
+         }
 
     void onHomePagePause(){
         mSocket.off("private message");
