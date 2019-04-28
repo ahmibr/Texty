@@ -38,7 +38,6 @@ public class PrivateMessageActivity extends AppCompatActivity implements Private
         super.onCreate(savedInstanceState);
         setContentView(R.layout.homepage);
         String to = getIntent().getStringExtra("to");
-        Toast.makeText(getApplicationContext(), to, Toast.LENGTH_LONG).show();
 
 
         arrayList = new ArrayList<Message>();
@@ -109,7 +108,6 @@ public class PrivateMessageActivity extends AppCompatActivity implements Private
     public void onSendClick(View v) {
         String message = ((EditText) findViewById(R.id.Message)).getText().toString();
         ((EditText) findViewById(R.id.Message)).getText().clear();
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
         mPresenter.sendMessage(message);
     }
 
@@ -123,6 +121,5 @@ public class PrivateMessageActivity extends AppCompatActivity implements Private
         list.setSelection(list.getCount() - 1);
         notificationSound.start();
     }
-
 
 }
