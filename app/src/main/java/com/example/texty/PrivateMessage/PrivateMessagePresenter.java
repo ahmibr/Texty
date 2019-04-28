@@ -20,6 +20,7 @@ public class PrivateMessagePresenter {
     private Socket mSocket;
     private String myUsername;
     private final String TAG = "PrivateMessagePresenter";
+    private Emitter.Listener onReconnect = null;
     
     PrivateMessagePresenter(PrivateMessageView view,String to){
         mView = view;
@@ -36,9 +37,15 @@ public class PrivateMessagePresenter {
             Emitter.Listener onPrivateMessage = new Emitter.Listener() {
                 @Override
                 public void call(final Object... args) { receivePrivateMessage(args); }};
+            onReconnect = new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    mSocket.emit("username",myUsername);
+                }
+            };
 
             mSocket.on("private message",onPrivateMessage);
-
+            mSocket.on(Socket.EVENT_RECONNECT,onReconnect);
             mSocket.connect();
 
             Log.d(TAG,"Started socket successfully");
