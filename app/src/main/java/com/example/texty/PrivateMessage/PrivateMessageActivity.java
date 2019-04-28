@@ -52,6 +52,11 @@ public class PrivateMessageActivity extends AppCompatActivity implements Private
         Button More = (Button) findViewById(R.id.more);
         More.setVisibility(View.GONE);
         notificationSound = MediaPlayer.create(this, R.raw.notificationprivate);
+
+//        to delete messageadapter
+        //arrayList.removeAll(arrayList);
+       // messageadapter.notifyDataSetChanged();
+
     }
 
     @Override
