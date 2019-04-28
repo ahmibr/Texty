@@ -38,6 +38,7 @@ public class PrivateMessagePresenter {
                 public void call(final Object... args) { receivePrivateMessage(args); }};
 
             mSocket.on("private message",onPrivateMessage);
+
             mSocket.connect();
 
             Log.d(TAG,"Started socket successfully");

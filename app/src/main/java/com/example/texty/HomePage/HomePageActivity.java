@@ -198,7 +198,9 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
             case R.id.Log_Out:
                 mPresenter.logOut();
                 Intent sign_in = new Intent(getApplicationContext(), SignInActivity.class);
+                printToast("See you soon");
                 startActivity(sign_in);
+                finish();
                 return true;
             case 0:
                 return false;
