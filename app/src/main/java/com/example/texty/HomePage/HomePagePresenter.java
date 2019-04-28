@@ -29,6 +29,8 @@ public class HomePagePresenter {
     private Emitter.Listener onUserJoin = null;
     private Emitter.Listener onRetrieveUserList = null;
     private Emitter.Listener onUserLeave = null;
+    private Emitter.Listener onIdentifyUser = null;
+    private Emitter.Listener onReconnect = null;
 
     HomePagePresenter(HomePageView view){
         mView = view;
@@ -75,13 +77,31 @@ public class HomePagePresenter {
                     removeLeftUser(args);
                 }};
 
+            onIdentifyUser = new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    mSocket.emit("username",myUserName);
+                }
+            };
+
+            onReconnect = new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    mSocket.emit("username",myUserName);
+                }
+            };
+
+
             mSocket.on("group message",onNewMessage);
             mSocket.on("private message",onPrivateMessage);
             mSocket.on("user join",onUserJoin);
             mSocket.on("user leave",onUserLeave);
             mSocket.on("retrieve list",onRetrieveUserList);
+            mSocket.on("identify username",onIdentifyUser);
+            mSocket.on(Socket.EVENT_RECONNECT,onReconnect);
             mSocket.connect();
-            mSocket.emit("username",myUserName);
+
+
 
             Log.d(TAG,"Started socket successfully");
 
@@ -172,14 +192,23 @@ public class HomePagePresenter {
 
         mView.runThread(mThread);
     }
-    void logOut(){ // TODO Ahmed CAll Function of Authenticator
-         }
+
+    void logOut(){
+
+        Authenticator.logOut(mView.getContext());
+        mSocket.disconnect();
+    }
 
     void onHomePagePause(){
         mSocket.off("private message");
     }
 
     void onHomePageResume(){
+        if(!mSocket.connected())
+        {
+            mSocket.connect();
+            mSocket.emit("username",myUserName);
+        }
         mSocket.on("private message",onPrivateMessage);
     }
 
