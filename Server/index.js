@@ -44,7 +44,7 @@ io.on('connection', function(socket){
       usersList.push(username);
       socket.broadcast.emit("user join",username);
     }
-    io.to(socket.id).emit("retrieve list",usersList);
+    io.to(socket.id).emit("retrieve list",usersList.filter(function(value, index, arr){ return value !== username;}));
   });
 
   socket.on('disconnect', function(){
