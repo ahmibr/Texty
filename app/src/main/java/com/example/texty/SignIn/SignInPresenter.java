@@ -22,7 +22,15 @@ public class SignInPresenter {
         mView = view;
     }
 
+    /**
+     * Sends sign in request to server
+     *
+     * @author Ahmed Ibrahim
+     * @version 1.0
+     */
     void signIn(final String username, String password){
+
+        //********************Validate input************************************//
         if(username.isEmpty()){
             mView.onFail("Please enter username");
             return;
@@ -31,13 +39,19 @@ public class SignInPresenter {
             mView.onFail("Please enter password");
             return;
         }
+        /************************************************************************/
 
+
+        //Initialize connection to server
         AsyncHttpClient server = new AsyncHttpClient();
 
         RequestParams params = new RequestParams();
 
 
         JsonHttpResponseHandler responseHandler = new JsonHttpResponseHandler(){
+
+            /*****************************On Success******************************************************/
+
             @Override
             public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, JSONObject response) {
 
@@ -46,17 +60,21 @@ public class SignInPresenter {
                 Log.i(TAG, "Request was sent successfully!");
 
                 try {
+                    //If sign in is done successfully
                     if (response.isNull("errors")) {
+                        //retrieve token
                         String token = response.getString("token");
                         Log.d(TAG,"Token = " + token);
                         Log.d(TAG,"Username = " + username);
+
+                        //set user info
                         Authenticator.setUsername(mView.getContext(),username);
                         Authenticator.setToken(mView.getContext(),token);
 
                         mView.onSuccess();
                     }
                     else {
-
+                        //Print errors
                         JSONArray jsonArray = response.getJSONArray("errors");
 
                         String error = jsonArray.getString(0);
@@ -69,6 +87,7 @@ public class SignInPresenter {
                 }
             }
 
+            /*****************************On fail******************************************************/
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
@@ -91,8 +110,11 @@ public class SignInPresenter {
 
         };
 
+        // Put user info into request
         params.put("username",username);
         params.put("password",password);
+
+        //send request to server
         server.post(Constants.SIGN_IN_API, params, responseHandler);
 
 
