@@ -1,15 +1,13 @@
 const jwt = require('jsonwebtoken');
 const utils = require('../util');
 const userkey = require('../keys').api.userSecret;
+const mongoose = require('mongoose');
 
 var exports = module.exports = {};
 
-exports.io = null;
-exports.UsernamesMap = null;
 exports.User = null;
 exports.Conversation = null;
 exports.Message = null;
-exports.usersList = null;
 
 exports.request = async (req, res) => {
     var path = req.path;
@@ -42,8 +40,7 @@ exports.request = async (req, res) => {
 
 exports.getUsers = async () => {
     var usernames = await exports.User.findAll({ attributes: ['username'] })
-    exports.usersList = utils.usernames2list(usernames);
-    return exports.usersList;
+    return utils.usernames2list(usernames);
 }
 
 exports.createConversation = async (participants, type) => {
@@ -68,7 +65,7 @@ exports.createRoom = async () => {
 }
 
 
-exports.updateRoom = async () => {
+exports.updateRoom = async (newUsernames) => {
     var room = await exports.Conversation.find({ conversationType: true });
     if (room.length === 0) {
         room = await exports.createRoom();
@@ -77,14 +74,12 @@ exports.updateRoom = async () => {
     }
     else {
         room = room[0];
-        var usernames = utils.usernames2list(await exports.User.findAll({ attributes: ['username'] }));
+        var usernames = room.participantsNames;
+        usernames.push(...newUsernames);
         room.participantsNames = usernames;
         var updatedRoom = await room.save();
-        if (updatedRoom) {
-            exports.usersList = updatedRoom.participantsNames;
-            exports.io.sockets.emit("retrieve list", exports.usersList);
+        if (updatedRoom)
             return true;
-        }
     }
 
     return false;
