@@ -21,6 +21,7 @@ var mongoose_models = require("./models/mongoose/model");
 
 // setting models for API
 require("./controllers/apiAuth").User = sequelize_models.user;
+require("./controllers/apiChat").User = sequelize_models.user;
 require("./controllers/apiChat").Conversation = mongoose_models.Conversation;
 require("./controllers/apiChat").Message = mongoose_models.Message;
 

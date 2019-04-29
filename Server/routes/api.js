@@ -13,6 +13,7 @@ router.post('/reset', apiAuthController.request);
 // chat routes
 router.post('/conversations', apiChatController.request);
 router.post('/messages', apiChatController.request);
+router.post('/create', apiChatController.request);
 router.post('/send', apiChatController.request);
 
 module.exports = router;
