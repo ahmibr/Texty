@@ -1,13 +1,14 @@
 const jwt = require('jsonwebtoken');
 const utils = require('../util');
 const userkey = require('../keys').api.userSecret;
-const mongoose = require('mongoose');
 
 var exports = module.exports = {};
 
+exports.io = null;
 exports.User = null;
 exports.Conversation = null;
 exports.Message = null;
+exports.usersList = null;
 
 exports.request = async (req, res) => {
     var path = req.path;
@@ -40,7 +41,8 @@ exports.request = async (req, res) => {
 
 exports.getUsers = async () => {
     var usernames = await exports.User.findAll({ attributes: ['username'] })
-    return utils.usernames2list(usernames);
+    exports.usersList = utils.usernames2list(usernames);
+    return exports.usersList;
 }
 
 exports.createConversation = async (participants, type) => {
@@ -78,8 +80,11 @@ exports.updateRoom = async (newUsernames) => {
         usernames.push(...newUsernames);
         room.participantsNames = usernames;
         var updatedRoom = await room.save();
-        if (updatedRoom)
+        if (updatedRoom) {
+            exports.usersList.push(...newUsernames);
+            exports.io.sockets.emit("update members", exports.usersList);
             return true;
+        }
     }
 
     return false;
