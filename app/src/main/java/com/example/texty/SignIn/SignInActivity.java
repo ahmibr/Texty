@@ -33,7 +33,9 @@ public class SignInActivity extends AppCompatActivity {
         boolean valid = true;
         EditText userNameEditText = (EditText) findViewById(R.id.usernameText);
         String userName = userNameEditText.getText().toString();
-
+        EditText passwordEditText = (EditText) findViewById(R.id.passwordText);
+        String password = passwordEditText.getText().toString();
+        
         if(userName.length()==0)
 
         {
@@ -47,6 +49,19 @@ public class SignInActivity extends AppCompatActivity {
             userNameEditText.requestFocus();
             userNameEditText.setError("ENTER ONLY ALPHABETICAL CHARACTER");
             valid = false ;
+        }
+        if (password.length()== 0)
+        {
+            passwordEditText.requestFocus();
+            passwordEditText.setError("FIELD CANNOT BE EMPTY");
+            valid = false ;
+        }
+        else if (password.length()< 8)
+        {
+            passwordEditText.requestFocus();
+            passwordEditText.setError("PASSWORD MUST AT LEAST 8 CHARACTER");
+            valid = false ;
+
         }
 
         //TODO Validation For Password too
