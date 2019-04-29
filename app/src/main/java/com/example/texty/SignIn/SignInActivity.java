@@ -70,6 +70,7 @@ public class SignInActivity extends AppCompatActivity implements SignInView{
 
         }
         if (valid){
+
             progressDialog = ProgressDialog.show(SignInActivity.this, "Login",
                     "Please wait for a while.", true);
 
