@@ -10,24 +10,19 @@ var userIDs = new Map();
 var usernames = new Map();
 var usersList = [];
 
-// console.log("Server started");
-// app.get('/', function(req, res){
-//   res.sendFile(__dirname + '/index.html');
-// });
-
 // express config
-// app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(bodyParser.json());
-// app.use(expressValidator());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(expressValidator());
 
 // Models
-// var sequelize_models = require("./models/sequelize");
-// var mongoose_models = require("./models/mongoose/model");
+var sequelize_models = require("./models/sequelize");
+var mongoose_models = require("./models/mongoose/model");
 
 // setting models for API
-// require("./routes/api").User = sequelize_models.user;
-// require("./routes/api").Conversation = mongoose_models.Conversation;
-// require("./routes/api").Message = mongoose_models.Message;
+require("./controllers/apiAuth").User = sequelize_models.user;
+require("./controllers/apiChat").Conversation = mongoose_models.Conversation;
+require("./controllers/apiChat").Message = mongoose_models.Message;
 
 const routes = require('./routes/web');
 app.use('/', routes);
@@ -87,12 +82,12 @@ io.on('connection', function(socket){
 });
 
 
-//Sync Database
-// sequelize_models.sequelize.sync().then(function() {
-//     console.log('Nice! Database looks fine')
-// }).catch(function(err) {
-//     console.log(err, "Something went wrong with the Database Update!")
-// });
+// Sync Database
+sequelize_models.sequelize.sync().then(function() {
+    console.log('Nice! Database looks fine')
+}).catch(function(err) {
+    console.log(err, "Something went wrong with the Database Update!")
+});
 
 
 http.listen(port, function(){
