@@ -113,13 +113,21 @@ public class PrivateMessageActivity extends AppCompatActivity implements Private
 
 
     @Override
-    public void addOtherMessage(String message, String username) {
+    public void addOtherMessage(String message, String username,boolean notify) {
         Message m = new Message(username, message, 2);
         arrayList.add(m);
         messageadapter.notifyDataSetChanged();
         ListView list = (ListView) findViewById(R.id.messages_view);
         list.setSelection(list.getCount() - 1);
-        notificationSound.start();
+        if(notify == true) {
+            notificationSound.start();
+        }
+    }
+
+    @Override
+    public void clearChat() {
+        arrayList.clear();
+        messageadapter.notifyDataSetChanged();
     }
 
 }

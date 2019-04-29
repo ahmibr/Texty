@@ -48,7 +48,8 @@ public class SignInPresenter {
                 try {
                     if (response.isNull("errors")) {
                         String token = response.getString("token");
-
+                        Log.d(TAG,"Token = " + token);
+                        Log.d(TAG,"Username = " + username);
                         Authenticator.setUsername(mView.getContext(),username);
                         Authenticator.setToken(mView.getContext(),token);
 
@@ -69,10 +70,23 @@ public class SignInPresenter {
             }
 
             @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                mView.onFail("Connection error, please check your connection and retry!");
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                mView.onFail("Connection error, please check your connection and retry!");
+            }
+
+            @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
                 mView.onFail("Connection error, please check your connection and retry!");
             }
+
 
 
         };

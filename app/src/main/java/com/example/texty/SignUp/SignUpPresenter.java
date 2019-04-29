@@ -54,6 +54,9 @@ public class SignUpPresenter {
                         Authenticator.setUsername(mView.getContext(),username);
                         Authenticator.setToken(mView.getContext(),token);
 
+                        Log.d(TAG,"Token = " + token);
+                        Log.d(TAG,"Username = " + username);
+
                         mView.onSuccess();
                     }
                     else {
@@ -67,6 +70,18 @@ public class SignUpPresenter {
                 catch (Exception e) {
                     Log.e(TAG, "Can't retrieve message from json response!");
                 }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                mView.onFail("Connection error, please check your connection and retry!");
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                mView.onFail("Connection error, please check your connection and retry!");
             }
 
             @Override

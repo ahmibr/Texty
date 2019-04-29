@@ -8,6 +8,7 @@ import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,6 +22,7 @@ public class PrivateMessagePresenter {
     private String myUsername;
     private final String TAG = "PrivateMessagePresenter";
     private Emitter.Listener onReconnect = null;
+    private Emitter.Listener onRetrieveHistory = null;
     
     PrivateMessagePresenter(PrivateMessageView view,String to){
         mView = view;
@@ -45,10 +47,22 @@ public class PrivateMessagePresenter {
                 }
             };
 
+            onRetrieveHistory = new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    retrieveHistory(args);
+                }
+            };
+
             mSocket.on("private message",onPrivateMessage);
             mSocket.on(Socket.EVENT_RECONNECT,onReconnect);
-            mSocket.connect();
-            mSocket.emit("username",myUsername);
+            mSocket.on("get private message",onRetrieveHistory);
+
+            if(!mSocket.connected()) {
+                mSocket.connect();
+                mSocket.emit("username", myUsername);
+            }
+            mSocket.emit("get private message",to);
             Log.d(TAG,"Started socket successfully");
 
         } catch (URISyntaxException e) {
@@ -91,7 +105,7 @@ public class PrivateMessagePresenter {
                     Log.d(TAG, "I received the message from: "+username);
 
                     if(username.equals(to)) {
-                        mView.addOtherMessage(message, username);
+                        mView.addOtherMessage(message, username,true);
                     }
                     else {
                         mView.notifyPrivateMessage(message, username);
@@ -102,6 +116,35 @@ public class PrivateMessagePresenter {
             }
         };
         Log.d(TAG,"I recieved private message");
+        mView.runThread(mThread);
+    }
+
+    private void retrieveHistory(final Object[] args){
+        Runnable mThread = new Runnable() {
+            @Override
+            public void run() {
+                JSONArray data = (JSONArray) args[0];
+                try {
+                    mView.clearChat();
+                    int len = data.length();
+                    for(int i=0;i<len;++i){
+                        String username = data.getJSONObject(i).getString("senderUserName");
+                        String message = data.getJSONObject(i).getString("content");
+                        if(username.equals(myUsername)) {
+                            mView.addMyMessage(message,myUsername);
+                        }
+                        else{
+                            mView.addOtherMessage(message,username,false);
+                        }
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
         mView.runThread(mThread);
     }
 }

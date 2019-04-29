@@ -43,9 +43,8 @@ public class Authenticator {
     }
 
     public static void logOut(Context context){
-        SharedPreferences.Editor editor = getSharedPreferences(context).edit();
-        editor.putString(PREF_USERNAME, "");
-        editor.commit();
+        setToken(context,"");
+        setUsername(context,"");
     }
 
 }

@@ -19,11 +19,13 @@ import java.util.List;
 
 public class HomePagePresenter {
 
-    private Socket mSocket;
+    private Socket mSocket = null;
     private HomePageView mView;
     private final String TAG = "HomePageActivity";
     private ArrayList<String> usersList;
     private String myUserName;
+
+    //Events listeners
     private Emitter.Listener onNewMessage = null;
     private Emitter.Listener onPrivateMessage = null;
     private Emitter.Listener onUserJoin = null;
@@ -31,6 +33,7 @@ public class HomePagePresenter {
     private Emitter.Listener onUserLeave = null;
     private Emitter.Listener onIdentifyUser = null;
     private Emitter.Listener onReconnect = null;
+    private Emitter.Listener onRetrieveHistory = null;
 
     HomePagePresenter(HomePageView view){
         mView = view;
@@ -46,7 +49,14 @@ public class HomePagePresenter {
         }
     }
 
-    void initializeSocket(){
+    /**
+     * Initializes socket connection
+     *
+     * @author  Ahmed Ibrahim
+     * @version 1.0
+     * @since   2019-03-31
+     */
+    private void initializeSocket(){
         //@TODO get server link from DB
         try {
             mSocket = IO.socket(Constants.CHAT_ROOM_API);
@@ -91,6 +101,12 @@ public class HomePagePresenter {
                 }
             };
 
+            onRetrieveHistory = new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    retrieveHistory(args);
+                }
+            };
 
             mSocket.on("group message",onNewMessage);
             mSocket.on("private message",onPrivateMessage);
@@ -99,9 +115,13 @@ public class HomePagePresenter {
             mSocket.on("retrieve list",onRetrieveUserList);
             mSocket.on("identify username",onIdentifyUser);
             mSocket.on(Socket.EVENT_RECONNECT,onReconnect);
-            mSocket.connect();
-
-
+            mSocket.on("get group message",onRetrieveHistory);
+            if(!mSocket.connected())
+            {
+                mSocket.connect();
+                mSocket.emit("username",myUserName);
+                mSocket.emit("get group message");
+            }
 
             Log.d(TAG,"Started socket successfully");
 
@@ -154,6 +174,7 @@ public class HomePagePresenter {
 
 
     }
+
 
     List<String> getUsersList(){
         return usersList;
@@ -208,6 +229,7 @@ public class HomePagePresenter {
         {
             mSocket.connect();
             mSocket.emit("username",myUserName);
+            mSocket.emit("get group message");
         }
         mSocket.on("private message",onPrivateMessage);
     }
@@ -249,7 +271,7 @@ public class HomePagePresenter {
                     String message = data.getString("message");
 
                     Log.d(TAG, "I received the message from: ");
-                    mView.addOtherMessage(message, username);
+                    mView.addOtherMessage(message, username,true);
 
                 }
                 catch (JSONException e) {
@@ -260,6 +282,36 @@ public class HomePagePresenter {
 
         mView.runThread(mThread);
     }
+
+    private void retrieveHistory(final Object[] args){
+        Runnable mThread = new Runnable() {
+            @Override
+            public void run() {
+                JSONArray data = (JSONArray) args[0];
+                try {
+                    mView.clearChat();
+                   int len = data.length();
+                   for(int i=0;i<len;++i){
+                       String username = data.getJSONObject(i).getString("senderUserName");
+                       String message = data.getJSONObject(i).getString("content");
+                       if(username.equals(myUserName)) {
+                           mView.addMyMessage(message,myUserName);
+                       }
+                       else{
+                           mView.addOtherMessage(message,username,false);
+                       }
+                   }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        mView.runThread(mThread);
+    }
+
     public boolean isLoggedIn() {
         return Authenticator.isLoggedIn(mView.getContext());
     }
