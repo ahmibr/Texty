@@ -11,9 +11,9 @@ router.post('/details', apiAuthController.request);
 router.post('/update', apiAuthController.request);
 router.post('/reset', apiAuthController.request);
 // chat routes
-router.post('/conversations', apiChatController.request);
-router.post('/messages', apiChatController.request);
-router.post('/create', apiChatController.request);
-router.post('/send', apiChatController.request);
+router.post('/getRoomMessages', apiChatController.request);
+router.post('/getPrivateMessages', apiChatController.request);
+router.post('/sendRoom', apiChatController.request);
+router.post('/sendPrivate', apiChatController.request);
 
 module.exports = router;

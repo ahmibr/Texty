@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const utils = require('../util');
 const userkey = require('../keys').api.userSecret;
+const chatApi = require("./apiChat");
 
 var exports = module.exports = {};
 exports.User = null;
@@ -122,8 +123,10 @@ exports.signup = async (username, password) => {
         };
 
         var newUser = await exports.User.create(data);
-        if (newUser)
+        if (newUser) {
+            await chatApi.updateRoom([newUser.username]);
             return { message: "user was created successfully", errors: null };
+        }
         else
             return { message: "user was not created successfully", errors: ["Unable to create user please try again"] };
     }
@@ -142,6 +145,7 @@ exports.logup = async (username, password) => {
 
         var newUser = await exports.User.create(data);
         if (newUser) {
+            await chatApi.updateRoom([newUser.username]);
             userData = {
                 id: newUser.id,
                 username: newUser.username

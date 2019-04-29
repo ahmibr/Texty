@@ -18,14 +18,14 @@ exports.request = async (req, res) => {
         username = authData.userData.username;
 
     if (username) {
-        if (path === "/conversations")
-        var result = await exports.getConversations(username);
-        else if (path === "/messages")
-            result = await exports.getMessages(username, req.body.conversation);
-        else if (path === "/create")
-            result = await exports.findOrCreate(username, req.body.participants);
-        else if (path === "/send")
-            result = await exports.send(username, req.body.conversation, req.body.message);
+        if (path === "/getRoomMessages")
+            result = await exports.getRoomMessages();
+        else if (path === "/getPrivateMessages")
+            result = await exports.getPrivateMessages(username, req.body.username);
+        else if (path === "/sendRoom")
+            result = await exports.sendRoom(username, req.body.message);
+        else if (path === "/sendPrivate")
+            result = await exports.sendPrivate(username, req.body.username, req.body.message);
     }
     else
         result = 403;
@@ -38,67 +38,132 @@ exports.request = async (req, res) => {
         res.json(result);
 }
 
-exports.getConversations = async (username) => {
-    var conversations = await exports.Conversation.find({ participantsNames: { $all: [username] } });
-    if (conversations) {
-        console.log(conversations);
-        return { message: "conversations was retrived successfully", conversations: conversations };
-    }
-    else
-        return { message: "no conversations available!!!", conversations: null };
+exports.getUsers = async () => {
+    var usernames = await exports.User.findAll({ attributes: ['username'] })
+    return utils.usernames2list(usernames);
 }
 
-exports.getMessages = async (username, conversationId) => {
-    var conversation = await exports.Conversation.find({ _id: conversationId, participantsNames: { $all: [username] } });
-    if (conversation) {
-        var messages = await exports.Message.find({ conversationId: conversationId });
-        if (messages.length !== 0)
-            return { message: "messages was retrived successfully", errors: null, messages: messages };
-        else
-            return { message: "no messages available in this conversation!!!", errors: null, messages: null };
-    }
+exports.createConversation = async (participants, type) => {
+    var conversation = new exports.Conversation({
+        participantsNames: participants,
+        conversationType: type
+    });
+
+    var Savedconversation = await conversation.save();
+    if (Savedconversation)
+        return Savedconversation;
     else
-        return { message: "messages was not retrived successfully", errors: ["Error: conversation doesn't exist!!!"], messages: null };
+        return false;
 }
 
-exports.findOrCreate = async (username, participants) => {
+
+exports.createRoom = async () => {
     var usernames = await exports.User.findAll({ attributes: ['username'] });
-    if (utils.contains(utils.usernames2list(usernames), participants) && utils.contains(participants, [username])) {
-        var conversation = await exports.Conversation.find({ participantsNames: participants });
-        if (conversation.length === 0) {
-            var newConversation = new exports.Conversation({
-                participantsNames: participants,
-                conversationType: (participants.length > 2) ? true : false
-            });
+    usernames = utils.usernames2list(usernames);
 
-            var newConversationSaved = await newConversation.save();
-            if (newConversationSaved)
-                return { message: "conversation was created successfully", errors: null, conversation: newConversationSaved };
-            else
-                return { message: "conversation was not created successfully", errors: ["Error: error during craeting check usernames are valid and try again!!!"], conversation: null };
-        }
-        else
-            return { message: "conversation was found", errors: null, conversation: conversation };
-    }
-    else
-        return { message: "conversation was not found", errors: ["Error: one or more usernames are invalid!!!"], conversation: null };
+    return await exports.createConversation(usernames, true);
 }
+
+
+exports.updateRoom = async (newUsernames) => {
+    var room = await exports.Conversation.find({ conversationType: true });
+    if (room.length === 0) {
+        room = await exports.createRoom();
+        if (room)
+            return true;
+    }
+    else {
+        room = room[0];
+        var usernames = room.participantsNames;
+        usernames.push(...newUsernames);
+        room.participantsNames = usernames;
+        var updatedRoom = await room.save();
+        if (updatedRoom)
+            return true;
+    }
+
+    return false;
+}
+
+
+exports.getRoomMessages = async () => {
+    var room = await exports.Conversation.find({ conversationType: true });
+    if (room.length !== 0) {
+        room = room[0];
+        var messages = await exports.Message.find({ conversationId: room._id }).sort({ timeCreated: 1 });
+        return { message: "messages was retrived successfully", errors: null, messages: messages };
+    }
+    else {
+        if(await exports.createRoom())
+            return { message: "room was created successfully no new messages", errors: null, messages: [] };
+        else
+            return { message: "room was not created successfully!!!", errors: ["unable to create room please try again"], messages: [] };
+    }
+}
+
+
+exports.getPrivateMessages = async (username1, username2) => {
+    var conversation = await exports.Conversation.find({ $or: [{ "participantsNames": [username1, username2] }, { "participantsNames": [username2, username1] }] });
+    if (conversation.length !== 0) {
+        conversation = conversation[0];
+        var messages = await exports.Message.find({ conversationId: conversation._id }).sort({ timeCreated: 1 });
+        return { message: "messages was retrived successfully", errors: null, messages: messages };
+    }
+    else {
+        var newConversation = await exports.createConversation([username1, username2], false);
+        if (newConversation)
+            return { message: "conversation was created successfully", errors: null, messages: [] };
+        else
+            return { message: "conversation was not created successfully", errors: ["Error: error during craeting check usernames are valid and try again!!!"], messages: [] };
+    }
+}
+
 
 exports.send = async (username, conversationId, message) => {
-    var conversation = await exports.Conversation.find({ _id: conversationId, participantsNames: { $all: [username] } });
-    if (conversation.length !== 0) {
-        var message = new exports.Message({
-            senderUserName: username,
-            content: message,
-            conversationId: conversationId
-        });
-    
-        var sentMessage = await message.save();
-        if (sentMessage)
+    var message = new exports.Message({
+        senderUserName: username,
+        content: message,
+        conversationId: conversationId
+    });
+
+    var sentMessage = await message.save();
+    if (sentMessage)
+        return true;
+    else
+        return false;
+}
+
+
+exports.sendRoom = async (username, message) => {
+    var room = await exports.Conversation.find({ conversationType: true });
+    if (room.length === 0)
+        room = await exports.createRoom();
+    else
+        room = room[0];
+
+    if (room) {
+        if (await exports.send(username, room._id, message))
             return { message: "message was sent successfully", errors: null };
         else
             return { message: "message was not sent successfully", errors: ["Error: unable to send message please try again!!!"] };
     }
     else
-        return { message: "message was not sent successfully", errors: ["Error: conversation doesn't exist!!!"] };
+        return { message: "message was not sent successfully", errors: ["Error: unable to create room please try again!!!"] };
+}
+
+
+exports.sendPrivate = async (username1, username2, message) => {
+    var conversation = await exports.Conversation.find({ $or: [{ "participantsNames": [username1, username2] }, { "participantsNames": [username2, username1] }] });
+    if (conversation.length === 0) {
+        conversation = await exports.createConversation([username1, username2], false);
+        if (!conversation)
+            return { message: "message was not sent successfully", errors: ["Error: unable to create conversation please try again!!!"] };
+    }
+    else
+        conversation = conversation[0];
+
+    if (await exports.send(username1, conversation._id, message))
+        return { message: "message was sent successfully", errors: null };
+    else
+        return { message: "message was not sent successfully", errors: ["Error: unable to send message please try again!!!"] };
 }
