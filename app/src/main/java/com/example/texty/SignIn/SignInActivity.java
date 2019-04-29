@@ -1,5 +1,7 @@
 package com.example.texty.SignIn;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,15 +13,19 @@ import android.widget.Toast;
 import com.example.texty.HomePage.HomePageActivity;
 import com.example.texty.R;
 import com.example.texty.SignUp.SignUpActivity;
+import com.example.texty.SignUp.SignUpPresenter;
 import com.example.texty.Utilities.Authenticator;
 
-public class SignInActivity extends AppCompatActivity {
+public class SignInActivity extends AppCompatActivity implements SignInView{
+
+    private SignInPresenter mPresenter;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signin);
-
+        mPresenter = new SignInPresenter(this);
     }
 
     public void SignUp(View v) {
@@ -64,12 +70,32 @@ public class SignInActivity extends AppCompatActivity {
 
         }
         if (valid){
-            Authenticator.setUsername(SignInActivity.this,userName);
-            Intent homepageIntent = new Intent(SignInActivity.this, HomePageActivity.class);
-            Toast.makeText(getApplicationContext(), "Hello " + userName, Toast.LENGTH_LONG).show();
-            startActivity(homepageIntent);
-            finish();
+            progressDialog = ProgressDialog.show(SignInActivity.this, "Login",
+                    "Please wait for a while.", true);
+
+            mPresenter.signIn(userName,password);
+
         }
+    }
+
+    @Override
+    public void onSuccess() {
+        progressDialog.dismiss();
+        Intent homepageIntent = new Intent(SignInActivity.this, HomePageActivity.class);
+//        Toast.makeText(getApplicationContext(), "Hello " + userName, Toast.LENGTH_LONG).show();
+        startActivity(homepageIntent);
+        finish();
+    }
+
+    @Override
+    public void onFail(String error) {
+        progressDialog.dismiss();
+        Toast.makeText(getApplicationContext(),error, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public Context getContext() {
+        return getApplicationContext();
     }
 }
 

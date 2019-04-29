@@ -18,14 +18,14 @@ var exports = module.exports = {};
 const conversationSchema = new Schema({
     participantsNames: [String],
     conversationType: {type: Boolean, required: true}
-});
+}, { collection: 'conversations' });
 
 const messageSchema = mongoose.Schema({
     senderUserName: {type: String, required: true},
     content: {type: String , required: true},
     timeCreated: {type: Date , default: Date.now},
     conversationId: {type: ObjectId, required: true}
-});
+}, { collection: 'messages' });
 
 const messageChar = mongoose.model('conversation' ,messageSchema);
 const conversationChar = mongoose.model('message' ,conversationSchema);

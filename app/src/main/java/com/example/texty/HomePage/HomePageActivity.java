@@ -61,7 +61,7 @@ public class HomePageActivity extends AppCompatActivity implements HomePageView,
 
     @Override
     public void greetUser(String username) {
-        Toast.makeText(getApplicationContext(), "Hello " + username, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Hello " + username, Toast.LENGTH_SHORT).show();
     }
 
 
