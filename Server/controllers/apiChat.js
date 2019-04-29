@@ -1,13 +1,15 @@
 const jwt = require('jsonwebtoken');
 const utils = require('../util');
 const userkey = require('../keys').api.userSecret;
-const mongoose = require('mongoose');
 
 var exports = module.exports = {};
 
+exports.io = null;
+exports.UsernamesMap = null;
 exports.User = null;
 exports.Conversation = null;
 exports.Message = null;
+exports.usersList = null;
 
 exports.request = async (req, res) => {
     var path = req.path;
@@ -40,7 +42,8 @@ exports.request = async (req, res) => {
 
 exports.getUsers = async () => {
     var usernames = await exports.User.findAll({ attributes: ['username'] })
-    return utils.usernames2list(usernames);
+    exports.usersList = utils.usernames2list(usernames);
+    return exports.usersList;
 }
 
 exports.createConversation = async (participants, type) => {
@@ -65,7 +68,7 @@ exports.createRoom = async () => {
 }
 
 
-exports.updateRoom = async (newUsernames) => {
+exports.updateRoom = async () => {
     var room = await exports.Conversation.find({ conversationType: true });
     if (room.length === 0) {
         room = await exports.createRoom();
@@ -74,12 +77,14 @@ exports.updateRoom = async (newUsernames) => {
     }
     else {
         room = room[0];
-        var usernames = room.participantsNames;
-        usernames.push(...newUsernames);
+        var usernames = utils.usernames2list(await exports.User.findAll({ attributes: ['username'] }));
         room.participantsNames = usernames;
         var updatedRoom = await room.save();
-        if (updatedRoom)
+        if (updatedRoom) {
+            exports.usersList = updatedRoom.participantsNames;
+            exports.io.sockets.emit("retrieve list", exports.usersList);
             return true;
+        }
     }
 
     return false;
@@ -90,7 +95,7 @@ exports.getRoomMessages = async () => {
     var room = await exports.Conversation.find({ conversationType: true });
     if (room.length !== 0) {
         room = room[0];
-        var messages = await exports.Message.find({ conversationId: room._id }).sort({ timeCreated: 1 });
+        var messages = await exports.Message.find({ conversationId: room._id }).sort({ timeCreated: 1 }).select('senderUserName content -_id');
         return { message: "messages was retrived successfully", errors: null, messages: messages };
     }
     else {
@@ -106,7 +111,7 @@ exports.getPrivateMessages = async (username1, username2) => {
     var conversation = await exports.Conversation.find({ $or: [{ "participantsNames": [username1, username2] }, { "participantsNames": [username2, username1] }] });
     if (conversation.length !== 0) {
         conversation = conversation[0];
-        var messages = await exports.Message.find({ conversationId: conversation._id }).sort({ timeCreated: 1 });
+        var messages = await exports.Message.find({ conversationId: conversation._id }).sort({ timeCreated: 1 }).select('senderUserName content -_id');
         return { message: "messages was retrived successfully", errors: null, messages: messages };
     }
     else {

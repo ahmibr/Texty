@@ -26,24 +26,25 @@ require("./controllers/apiChat").Message = mongoose_models.Message;
 const routes = require('./routes/web');
 app.use('/', routes);
 
-
+chatApi.getUsers();
+chatApi.io = io;
 var userIDs = new Map();
 var usernames = new Map();
-var usersList = [];
+// var usersList = [];
 
 io.on('connection', async (socket) => {
-    if (usersList.length === 0)
-        usersList = await chatApi.getUsers();
+    // if (usersList.length === 0)
+    //     usersList = await chatApi.getUsers();
     console.log('a user connected');
     socket.on('username', function(username) {
         console.log(username + ' set user name');
         userIDs.set(username, socket.id);
         usernames.set(socket.id, username);
-        if(!usersList.includes(username)){
-            usersList.push(username);
+        if(!chatApi.usersList.includes(username)){
+            // usersList.push(username);
             socket.broadcast.emit("user join", username);
         }
-        io.to(socket.id).emit("retrieve list",usersList.filter(function(value, index, arr){ return value !== username;}));
+        io.to(socket.id).emit("retrieve list",chatApi.usersList.filter(function(value, index, arr){ return value !== username;}));
     });
 
     socket.on('disconnect', function() {
@@ -52,7 +53,7 @@ io.on('connection', async (socket) => {
             console.log(username + ' disconnected');
             usernames.delete(socket.id);
             userIDs.delete(username);
-            usersList = usersList.filter(function(value, index, arr){ return value !== username;});
+            // usersList = usersList.filter(function(value, index, arr){ return value !== username;});
             socket.broadcast.emit("user leave", username);
         }
     });
@@ -86,7 +87,7 @@ io.on('connection', async (socket) => {
     socket.on('get private message', function(username2){
         if (usernames.has(socket.id)) {
             var username1 = usernames.get(socket.id);
-            if (usersList.includes(username2)) {
+            if (chatApi.usersList.includes(username2)) {
                 chatApi.getPrivateMessages(username1, username2).then(function(result) {
                     if (result.errors === null) {
                         var dataSent = { "username": username1, "messages": result.messages };
@@ -105,7 +106,7 @@ io.on('connection', async (socket) => {
         if(usernames.has(socket.id)){
             var username = usernames.get(socket.id);
             //if user is online
-            if (usersList.includes(to)) {
+            if (chatApi.usersList.includes(to)) {
                 chatApi.sendPrivate(username, to, message).then(function (result) {
                     if (result.errors === null) {
                         if (userIDs.has(to)) {
