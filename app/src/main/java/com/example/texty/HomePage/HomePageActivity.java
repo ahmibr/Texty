@@ -27,9 +27,7 @@ import android.widget.Toast;
 import com.example.texty.PrivateMessage.PrivateMessageActivity;
 import com.example.texty.R;
 import com.example.texty.SignIn.SignInActivity;
-import com.example.texty.Utilities.Authenticator;
 
-import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.List;
 

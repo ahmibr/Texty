@@ -24,7 +24,7 @@ public class SignInActivity extends AppCompatActivity {
 
     public void SignUp(View v) {
 
-        String userName = ((EditText) findViewById(R.id.usernameText)).getText().toString();
+        //String userName = ((EditText) findViewById(R.id.usernameText)).getText().toString();
         Intent signupIntent = new Intent(SignInActivity.this, SignUpActivity.class);
         startActivity(signupIntent);
         finish();
@@ -35,7 +35,7 @@ public class SignInActivity extends AppCompatActivity {
         String userName = userNameEditText.getText().toString();
         EditText passwordEditText = (EditText) findViewById(R.id.passwordText);
         String password = passwordEditText.getText().toString();
-        
+
         if(userName.length()==0)
 
         {
@@ -63,8 +63,6 @@ public class SignInActivity extends AppCompatActivity {
             valid = false ;
 
         }
-
-        //TODO Validation For Password too
         if (valid){
             Authenticator.setUsername(SignInActivity.this,userName);
             Intent homepageIntent = new Intent(SignInActivity.this, HomePageActivity.class);
