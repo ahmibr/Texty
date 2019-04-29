@@ -14,6 +14,12 @@ public class Authenticator {
         return PreferenceManager.getDefaultSharedPreferences(ctx);
     }
 
+    /**
+     * Sets username into SharedPreferences
+     *
+     * @author Ahmed Ibrahim
+     * @version 1.0
+     */
     public static void setUsername(Context context, String username)
     {
         SharedPreferences.Editor editor = getSharedPreferences(context).edit();
@@ -21,11 +27,23 @@ public class Authenticator {
         editor.commit();
     }
 
+    /**
+     * gets username from SharedPreferences
+     *
+     * @author Ahmed Ibrahim
+     * @version 1.0
+     */
     public static String getUsername(Context context)
     {
         return getSharedPreferences(context).getString(PREF_USERNAME, "");
     }
 
+    /**
+     * Sets token into SharedPreferences
+     *
+     * @author Ahmed Ibrahim
+     * @version 1.0
+     */
     public static void setToken(Context context, String token)
     {
         SharedPreferences.Editor editor = getSharedPreferences(context).edit();
@@ -33,15 +51,33 @@ public class Authenticator {
         editor.commit();
     }
 
+    /**
+     * Gets token into SharedPreferences
+     *
+     * @author Ahmed Ibrahim
+     * @version 1.0
+     */
     public static String getToken(Context context)
     {
         return getSharedPreferences(context).getString(PREF_TOKEN, "");
     }
 
+    /**
+     * Checks whether user is loggged in or not
+     *
+     * @author Ahmed Ibrahim
+     * @version 1.0
+     */
     public static boolean isLoggedIn(Context context){
        return getUsername(context).length() != 0;
     }
 
+    /**
+     * Logs user out from application
+     *
+     * @author Ahmed Ibrahim
+     * @version 1.0
+     */
     public static void logOut(Context context){
         setToken(context,"");
         setUsername(context,"");
