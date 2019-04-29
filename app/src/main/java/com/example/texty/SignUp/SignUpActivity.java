@@ -1,5 +1,6 @@
 package com.example.texty.SignUp;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,11 +18,13 @@ import android.widget.Toast;
 
 public class SignUpActivity extends AppCompatActivity implements SignUpView {
 
+    SignUpPresenter mPresenter;
+    private ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signup);
-        //Toast.makeText(getApplicationContext(), "Hello " + Authenticator.getUserName(getApplicationContext()), Toast.LENGTH_LONG).show();
+        mPresenter = new SignUpPresenter(this);
     }
 
     public void SignUp(View v){
@@ -60,7 +63,11 @@ public class SignUpActivity extends AppCompatActivity implements SignUpView {
 
         }
         if (valid){
-            // TODO ahmed call signup in presenter and pass data to it
+            progressDialog = ProgressDialog.show(SignUpActivity.this, "Login",
+                    "Please wait for a while.", true);
+
+            mPresenter.signUp(userName,password);
+
         }
     }
     public void SignIn(View v) {
@@ -71,6 +78,7 @@ public class SignUpActivity extends AppCompatActivity implements SignUpView {
 
     @Override
     public void onSuccess() {
+        progressDialog.dismiss();
         Intent homePageIntent = new Intent(SignUpActivity.this, HomePageActivity.class);
         startActivity(homePageIntent);
         finish();
@@ -78,13 +86,13 @@ public class SignUpActivity extends AppCompatActivity implements SignUpView {
 
     @Override
     public void onFail(String error) {
-
-        Toast.makeText(getApplicationContext(),"ERROR"+ error, Toast.LENGTH_LONG).show();
+        progressDialog.dismiss();
+        Toast.makeText(getApplicationContext(),error, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public Context getContext() {
-        return null;
+        return getApplicationContext();
     }
 }
 

@@ -9,6 +9,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
@@ -17,9 +18,9 @@ public class SignUpPresenter {
 
     final String TAG = "SignUpPresenter";
 
-    SignInView mView;
+    SignUpView mView;
 
-    SignUpPresenter(SignInView view){
+    SignUpPresenter(SignUpView view){
         mView = view;
     }
 
@@ -47,7 +48,7 @@ public class SignUpPresenter {
                 Log.i(TAG, "Request was sent successfully!");
 
                 try {
-                    if (response.isNull("error")) {
+                    if (response.isNull("errors")) {
                         String token = response.getString("token");
 
                         Authenticator.setUsername(mView.getContext(),username);
@@ -56,8 +57,10 @@ public class SignUpPresenter {
                         mView.onSuccess();
                     }
                     else {
-                        String error = response.getString("error");
+                        JSONArray jsonArray = response.getJSONArray("errors");
 
+                        String error = jsonArray.getString(0);
+                        Log.e(TAG,error);
                         mView.onFail(error);
                     }
                 }
@@ -66,9 +69,17 @@ public class SignUpPresenter {
                 }
             }
 
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                mView.onFail("Connection error, please check your connection and retry!");
+            }
+
 
         };
 
+        params.put("username",username);
+        params.put("password",password);
         server.post(Constants.SIGN_UP_API, params, responseHandler);
 
     }

@@ -1,5 +1,6 @@
 package com.example.texty.SignIn;
 
+import android.nfc.Tag;
 import android.util.Log;
 import android.view.View;
 
@@ -7,7 +8,10 @@ import com.example.texty.Utilities.Authenticator;
 import com.example.texty.Utilities.Constants;
 import com.loopj.android.http.*;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
 
 
 public class SignInPresenter {
@@ -42,17 +46,20 @@ public class SignInPresenter {
                 Log.i(TAG, "Request was sent successfully!");
 
                 try {
-                    if (response.isNull("error")) {
+                    if (response.isNull("errors")) {
                         String token = response.getString("token");
 
                         Authenticator.setUsername(mView.getContext(),username);
                         Authenticator.setToken(mView.getContext(),token);
 
-                        mView.onSuccess(username);
+                        mView.onSuccess();
                     }
                     else {
-                        String error = response.getString("error");
 
+                        JSONArray jsonArray = response.getJSONArray("errors");
+
+                        String error = jsonArray.getString(0);
+                        Log.e(TAG,error);
                         mView.onFail(error);
                     }
                 }
@@ -61,9 +68,17 @@ public class SignInPresenter {
                 }
             }
 
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                mView.onFail("Connection error, please check your connection and retry!");
+            }
+
 
         };
 
+        params.put("username",username);
+        params.put("password",password);
         server.post(Constants.SIGN_IN_API, params, responseHandler);
 
 
