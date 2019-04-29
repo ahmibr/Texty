@@ -1,5 +1,6 @@
 package com.example.texty.SignIn;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,7 +14,7 @@ import com.example.texty.R;
 import com.example.texty.SignUp.SignUpActivity;
 import com.example.texty.Utilities.Authenticator;
 
-public class SignInActivity extends AppCompatActivity {
+public class SignInActivity extends AppCompatActivity implements SignInView{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,11 +53,26 @@ public class SignInActivity extends AppCompatActivity {
         //TODO Validation For Password too
         if (valid){
             Authenticator.setUsername(SignInActivity.this,userName);
-            Intent homepageIntent = new Intent(SignInActivity.this, HomePageActivity.class);
-            Toast.makeText(getApplicationContext(), "Hello " + userName, Toast.LENGTH_LONG).show();
-            startActivity(homepageIntent);
-            finish();
+
         }
+    }
+
+    @Override
+    public void onSuccess(String userName) {
+        Intent homepageIntent = new Intent(SignInActivity.this, HomePageActivity.class);
+        Toast.makeText(getApplicationContext(), "Hello " + userName, Toast.LENGTH_LONG).show();
+        startActivity(homepageIntent);
+        finish();
+    }
+
+    @Override
+    public void onFail(String error) {
+
+    }
+
+    @Override
+    public Context getContext() {
+        return null;
     }
 }
 

@@ -48,13 +48,11 @@ public class SignInPresenter {
                         Authenticator.setUsername(mView.getContext(),username);
                         Authenticator.setToken(mView.getContext(),token);
 
-                        //@TODO add callback
-                        mView.onSuccess();
+                        mView.onSuccess(username);
                     }
                     else {
                         String error = response.getString("error");
 
-                        //@TODO add callback
                         mView.onFail(error);
                     }
                 }
