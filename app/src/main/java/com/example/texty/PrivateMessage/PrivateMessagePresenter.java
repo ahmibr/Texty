@@ -37,6 +37,7 @@ public class PrivateMessagePresenter {
             Emitter.Listener onPrivateMessage = new Emitter.Listener() {
                 @Override
                 public void call(final Object... args) { receivePrivateMessage(args); }};
+
             onReconnect = new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
@@ -47,7 +48,7 @@ public class PrivateMessagePresenter {
             mSocket.on("private message",onPrivateMessage);
             mSocket.on(Socket.EVENT_RECONNECT,onReconnect);
             mSocket.connect();
-
+            mSocket.emit("username",myUsername);
             Log.d(TAG,"Started socket successfully");
 
         } catch (URISyntaxException e) {
