@@ -30,7 +30,7 @@ public class SignInActivity extends AppCompatActivity implements SignInView{
 
     public void SignUp(View v) {
 
-        String userName = ((EditText) findViewById(R.id.usernameText)).getText().toString();
+        //String userName = ((EditText) findViewById(R.id.usernameText)).getText().toString();
         Intent signupIntent = new Intent(SignInActivity.this, SignUpActivity.class);
         startActivity(signupIntent);
         finish();
@@ -41,7 +41,7 @@ public class SignInActivity extends AppCompatActivity implements SignInView{
         String userName = userNameEditText.getText().toString();
         EditText passwordEditText = (EditText) findViewById(R.id.passwordText);
         String password = passwordEditText.getText().toString();
-        
+
         if(userName.length()==0)
 
         {
@@ -69,8 +69,6 @@ public class SignInActivity extends AppCompatActivity implements SignInView{
             valid = false ;
 
         }
-
-
         if (valid){
             progressDialog = ProgressDialog.show(SignInActivity.this, "Login",
                     "Please wait for a while.", true);
