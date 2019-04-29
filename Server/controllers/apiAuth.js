@@ -124,7 +124,7 @@ exports.signup = async (username, password) => {
 
         var newUser = await exports.User.create(data);
         if (newUser) {
-            await chatApi.updateRoom([newUser.username]);
+            await chatApi.updateRoom();
             return { message: "user was created successfully", errors: null };
         }
         else
@@ -145,7 +145,7 @@ exports.logup = async (username, password) => {
 
         var newUser = await exports.User.create(data);
         if (newUser) {
-            await chatApi.updateRoom([newUser.username]);
+            await chatApi.updateRoom();
             userData = {
                 id: newUser.id,
                 username: newUser.username

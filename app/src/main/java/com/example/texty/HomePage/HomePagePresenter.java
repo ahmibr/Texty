@@ -139,7 +139,9 @@ public class HomePagePresenter {
                 Log.d(TAG,"Received users list");
                 for(int i=0;i<data.length();++i){
                     try {
-                        usersList.add(data.getString(i));
+                        String member = data.getString(i);
+                        if (!member.equals(myUserName))
+                            usersList.add(data.getString(i));
                         Log.d(TAG,data.getString(i));
                     } catch (JSONException e) {
                         e.printStackTrace();

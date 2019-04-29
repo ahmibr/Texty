@@ -5,6 +5,7 @@ const userkey = require('../keys').api.userSecret;
 var exports = module.exports = {};
 
 exports.io = null;
+exports.UsernamesMap = null;
 exports.User = null;
 exports.Conversation = null;
 exports.Message = null;
@@ -67,7 +68,7 @@ exports.createRoom = async () => {
 }
 
 
-exports.updateRoom = async (newUsernames) => {
+exports.updateRoom = async () => {
     var room = await exports.Conversation.find({ conversationType: true });
     if (room.length === 0) {
         room = await exports.createRoom();
@@ -76,13 +77,12 @@ exports.updateRoom = async (newUsernames) => {
     }
     else {
         room = room[0];
-        var usernames = room.participantsNames;
-        usernames.push(...newUsernames);
+        var usernames = utils.usernames2list(await exports.User.findAll({ attributes: ['username'] }));
         room.participantsNames = usernames;
         var updatedRoom = await room.save();
         if (updatedRoom) {
-            exports.usersList.push(...newUsernames);
-            exports.io.sockets.emit("update members", exports.usersList);
+            exports.usersList = updatedRoom.participantsNames;
+            exports.io.sockets.emit("retrieve list", exports.usersList);
             return true;
         }
     }
