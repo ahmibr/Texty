@@ -48,7 +48,7 @@ exports.request = async (req, res) => {
         }
     }
     else if (path === "/signup" || path === "/logup") {
-        errors = exports.validate(req, username=true, password=true, confirmation=true);
+        errors = exports.validate(req, username=true, password=true);
 
         if (errors)
             result = { message: "signup was unsuccessful", token: null, errors: errors };
