@@ -90,7 +90,7 @@ exports.getRoomMessages = async () => {
     var room = await exports.Conversation.find({ conversationType: true });
     if (room.length !== 0) {
         room = room[0];
-        var messages = await exports.Message.find({ conversationId: room._id }).sort({ timeCreated: 1 });
+        var messages = await exports.Message.find({ conversationId: room._id }).sort({ timeCreated: 1 }).select('senderUserName content -_id');
         return { message: "messages was retrived successfully", errors: null, messages: messages };
     }
     else {
@@ -106,7 +106,7 @@ exports.getPrivateMessages = async (username1, username2) => {
     var conversation = await exports.Conversation.find({ $or: [{ "participantsNames": [username1, username2] }, { "participantsNames": [username2, username1] }] });
     if (conversation.length !== 0) {
         conversation = conversation[0];
-        var messages = await exports.Message.find({ conversationId: conversation._id }).sort({ timeCreated: 1 });
+        var messages = await exports.Message.find({ conversationId: conversation._id }).sort({ timeCreated: 1 }).select('senderUserName content -_id');
         return { message: "messages was retrived successfully", errors: null, messages: messages };
     }
     else {
