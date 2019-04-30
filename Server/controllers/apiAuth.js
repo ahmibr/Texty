@@ -108,7 +108,7 @@ exports.signin = async (username, password) => {
             }
         }
         else
-            return { message: "login was unsuccessful", errors: ["Email doesn't exist"] };
+            return { message: "login was unsuccessful", token: null, errors: ["Email doesn't exist"] };
 }
 
 exports.signup = async (username, password) => {
@@ -124,7 +124,7 @@ exports.signup = async (username, password) => {
 
         var newUser = await exports.User.create(data);
         if (newUser) {
-            await chatApi.updateRoom([newUser.username]);
+            await chatApi.updateRoom();
             return { message: "user was created successfully", errors: null };
         }
         else
@@ -145,7 +145,7 @@ exports.logup = async (username, password) => {
 
         var newUser = await exports.User.create(data);
         if (newUser) {
-            await chatApi.updateRoom([newUser.username]);
+            await chatApi.updateRoom();
             userData = {
                 id: newUser.id,
                 username: newUser.username

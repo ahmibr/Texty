@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', function(req, res){
-    res.sendFile(__dirname + '/../index.html');
+    res.json({message: "it works"});
+    // res.sendFile(__dirname + '/../index.html');
 });
 
 const api_routes = require('./api');

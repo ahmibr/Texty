@@ -65,7 +65,7 @@ exports.createRoom = async () => {
 }
 
 
-exports.updateRoom = async (newUsernames) => {
+exports.updateRoom = async () => {
     var room = await exports.Conversation.find({ conversationType: true });
     if (room.length === 0) {
         room = await exports.createRoom();
@@ -74,8 +74,10 @@ exports.updateRoom = async (newUsernames) => {
     }
     else {
         room = room[0];
-        var usernames = room.participantsNames;
-        usernames.push(...newUsernames);
+        // var usernames = room.participantsNames;
+        // usernames.push(...newUsernames);
+        var usernames = await exports.User.findAll({ attributes: ['username'] });
+        usernames = utils.usernames2list(usernames);
         room.participantsNames = usernames;
         var updatedRoom = await room.save();
         if (updatedRoom)
